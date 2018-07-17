@@ -3,6 +3,8 @@ package com.githubapi.search.searchgithubusers.di
 import android.app.Application
 import com.githubapi.search.searchgithubusers.base.BaseApplication
 import com.githubapi.search.searchgithubusers.di.binder.ActivityBindingModule
+import com.githubapi.search.searchgithubusers.di.binder.FragmentBindingModule
+import com.githubapi.search.searchgithubusers.di.data.ApiModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -12,8 +14,9 @@ import dagger.android.support.AndroidSupportInjectionModule
         AndroidSupportInjectionModule::class,
         AppModule::class,
         ActivityBindingModule::class,
-        ViewModelModule::class
-
+        FragmentBindingModule::class,
+        ViewModelModule::class,
+        ApiModule::class
         ))
 interface AppComponent: AndroidInjector<BaseApplication> {
 

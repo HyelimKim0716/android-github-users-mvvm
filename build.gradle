@@ -3,16 +3,19 @@
 buildscript {
 
     // Library Version
+    ext.androidSupportLibVersion = '27.1.1'
     ext.kotlinVersion = '1.2.51'
     ext.rxJava2Version = '2.1.12'
     ext.rxAndroidVersion = '2.0.1'
-    ext.mockitoVersion = '2.12.0'
-    ext.androidSupportLibVersion = '27.1.1'
     ext.daggerVersion = '2.14.1'
     ext.daggerAndroidVersion = '2.15'
     ext.realmVersion = '2.1.1'
+    ext.retrofitVersion = '2.4.0'
+    ext.okHttpVersion = '3.8.0'
+    ext.mockitoVersion = '2.12.0'
     ext.espressoVersion = '3.0.1'
     ext.androidSupportTestVersion = '1.0.2'
+
     
     repositories {
         google()

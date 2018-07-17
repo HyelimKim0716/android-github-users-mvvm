@@ -9,7 +9,7 @@ import android.view.ViewGroup
 
 abstract class BaseDataBindingFragment<BINDING: ViewDataBinding>: BaseFragment() {
     protected lateinit var binding: BINDING
-    protected abstract val TAG: String
+    protected abstract val TAG: String?
     protected abstract val layoutId: Int
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
