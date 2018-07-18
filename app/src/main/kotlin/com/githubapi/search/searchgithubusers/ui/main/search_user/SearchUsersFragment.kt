@@ -9,9 +9,6 @@ import com.githubapi.search.searchgithubusers.databinding.FragmentFavoriteUsersB
 import javax.inject.Inject
 
 class SearchUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBinding>() {
-    @Inject
-    lateinit var searchUsersApi: GithubSearchUserApi
-
 
     override val TAG: String? = this::class.simpleName
 
@@ -20,18 +17,6 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchUsersApi.searchUsers("tom+repos:%3E42+followers:%3E1000")
-                .subscribe({
-                    println("subscribe, ${it.total_count}, ${it.incomplete_results}")
-
-                    it.items.forEach { println("${it.id}") }
-
-                }, {
-                    it.printStackTrace()
-                    println("Get users error: ${it.message}")
-                }, {
-                    println("Get users results finished")
-                })
 
     }
 

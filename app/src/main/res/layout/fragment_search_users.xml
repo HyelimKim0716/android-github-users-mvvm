@@ -1,13 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="viewModel"
             type="com.githubapi.search.searchgithubusers.ui.main.search_user.SearchUsersViewModel" />
     </data>
     <android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/default_padding">
+
+        <Button
+            android:id="@+id/searchUsers_btnSearch"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:background="@drawable/selector_btn_search"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="@{() -> viewModel.searchUsers()}"
+            />
+
+        <EditText
+            android:id="@+id/searchUsers_etUserName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@={viewModel.userName}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/searchUsers_btnSearch"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/searchUsers_rvUsers"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="@dimen/default_padding"
+            app:layout_constraintTop_toBottomOf="@id/searchUsers_etUserName"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
 
     </android.support.constraint.ConstraintLayout>
 </layout>

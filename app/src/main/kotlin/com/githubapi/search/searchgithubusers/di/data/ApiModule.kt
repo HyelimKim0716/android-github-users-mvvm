@@ -59,7 +59,6 @@ class ApiModule {
         client(okHttpClientBuilder.build())
     }.build()
 
-    @Singleton
     @Provides
 //    @Singleton
     fun provideGithubSearchUserApi(retrofit: Retrofit)
