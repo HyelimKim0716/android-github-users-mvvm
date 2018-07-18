@@ -15,6 +15,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
     }
 
     buildTypes {
@@ -72,6 +78,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt 'com.google.auto.factory:auto-factory:1.0-beta5'
     implementation 'com.google.guava:guava:23.4-android'
+    compileOnly 'com.google.auto.factory:auto-factory:1.0-beta5'
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
     // Realm

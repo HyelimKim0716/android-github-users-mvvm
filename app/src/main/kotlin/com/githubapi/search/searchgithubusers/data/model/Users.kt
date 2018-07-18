@@ -20,4 +20,6 @@ data class Item(val login: String,
                 val type: String,
                 val site_admin: Boolean,
                 val source: Double
-                )
+                ) {
+    var isFavorite: Boolean = false
+}

@@ -29,15 +29,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/searchUsers_btnSearch"
-            />
+            android:lines="1" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/searchUsers_rvUsers"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:layout_constraintVertical_weight="1"
             android:padding="@dimen/default_padding"
             app:layout_constraintTop_toBottomOf="@id/searchUsers_etUserName"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:scrollbars="vertical" />
 
 
 
