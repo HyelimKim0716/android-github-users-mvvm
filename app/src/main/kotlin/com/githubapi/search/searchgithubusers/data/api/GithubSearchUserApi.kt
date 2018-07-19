@@ -1,4 +1,4 @@
-package com.githubapi.search.searchgithubusers.data
+package com.githubapi.search.searchgithubusers.data.api
 
 import com.githubapi.search.searchgithubusers.data.model.Users
 import io.reactivex.Observable

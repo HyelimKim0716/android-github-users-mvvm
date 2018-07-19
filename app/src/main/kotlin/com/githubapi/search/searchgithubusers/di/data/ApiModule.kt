@@ -1,6 +1,6 @@
 package com.githubapi.search.searchgithubusers.di.data
 
-import com.githubapi.search.searchgithubusers.data.GithubSearchUserApi
+import com.githubapi.search.searchgithubusers.data.api.GithubSearchUserApi
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

@@ -1,7 +1,7 @@
 package com.githubapi.search.searchgithubusers.ui.main.search_user
 
 import android.databinding.ObservableField
-import com.githubapi.search.searchgithubusers.data.GithubSearchUserApi
+import com.githubapi.search.searchgithubusers.data.api.GithubSearchUserApi
 import com.githubapi.search.searchgithubusers.data.model.Item
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
