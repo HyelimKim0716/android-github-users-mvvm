@@ -63,6 +63,10 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
         }
     }
 
+    override fun refresh() {
+        refreshUserList()
+    }
+
     private fun refreshUserList() {
         println("refreshUserList")
         adapter.notifyDataSetChanged()
@@ -72,9 +76,14 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
         LogMgr.d("checkFavoriteUser: position: $position, 1   isFavorite? ${viewModel.searchedUserList[position].isFavorite}")
 
         viewModel.searchedUserList[position].isFavorite = !viewModel.searchedUserList[position].isFavorite
-        viewModel.addFavoriteUser(position)
-        LogMgr.d("checkFavoriteUser: position: $position, 2   isFavorite? ${viewModel.searchedUserList[position].isFavorite}")
         adapter.notifyItemChanged(position)
+
+        if (viewModel.searchedUserList[position].isFavorite)
+            viewModel.addFavoriteUser(position)
+        else
+            viewModel.deleteOneItem(position)
+
+        LogMgr.d("checkFavoriteUser: position: $position, 2   isFavorite? ${viewModel.searchedUserList[position].isFavorite}")
 
     }
 

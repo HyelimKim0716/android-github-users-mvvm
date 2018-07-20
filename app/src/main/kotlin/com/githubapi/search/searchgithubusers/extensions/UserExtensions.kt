@@ -6,6 +6,7 @@ import com.githubapi.search.searchgithubusers.data.model.UserItem
 
 fun <T: User> User.convert(item: T): T
         = item.also {
+    it.userId = userId
     it.login = login
     it.id = id
     it.node_id = node_id

@@ -1,11 +1,15 @@
 package com.githubapi.search.searchgithubusers.ui.main.search_user
 
 import android.databinding.ObservableField
+import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.data.api.GithubSearchUserApi
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.data.repository.UserRepository
+import com.githubapi.search.searchgithubusers.extensions.toUserItem
+import com.githubapi.search.searchgithubusers.ui.main.favorite_user.FavoriteUsersViewEvent
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import java.util.*
 
 class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, private val userRepository: UserRepository) {
 
@@ -30,9 +34,15 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
                     .subscribe({
                         println("subscribe, ${it.total_count}, ${it.incomplete_results}")
 
-                        it.userItems.forEach { println("${it.login}") }
+                        it.items.forEach {
+                            println("${it.login}")
+                            it.userId = UUID.randomUUID().toString()
+                            it.isFavorite = userRepository.getUser(it.id, it.login)
+                            searchedUserList.add(it.toUserItem())
+                        }
 
-                        searchedUserList.addAll(it.userItems)
+
+//                        searchedUserList.addAll(it.userItems)
 
 
                     }, {
@@ -47,5 +57,17 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
 
     fun addFavoriteUser(position: Int) {
         userRepository.addUserItem(searchedUserList[position])
+    }
+
+    fun deleteOneItem(position: Int) {
+        userRepository.deleteUserItem(searchedUserList[position].userId).subscribe({
+            LogMgr.d("delete $position item completed")
+
+            sendUsersViewEvent(SearchUsersViewEvent.REFRESH_ONE_ITEM, position)
+        }, {
+            it.printStackTrace()
+            LogMgr.e("getAllFavoriteUsers Failed. Error: ${it.message}")
+        })
+
     }
 }

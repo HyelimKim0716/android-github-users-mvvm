@@ -5,23 +5,36 @@ import android.util.Log
 
 object LogMgr {
     fun getFunction(): String {
-        val stackTraceElements = Throwable().stackTrace
-        val splitter = TextUtils.SimpleStringSplitter('.').apply {
-            setString(stackTraceElements[1].fileName)
+        val stringBuilder = StringBuilder("SearchGithubUsers/")
+        var stackTrace: StackTraceElement? = null
+        var simpleClassName = ""
+
+        for (i in 5..7) {
+            stackTrace = Thread.currentThread().stackTrace[i]
+            simpleClassName = stackTrace.className.substringAfterLast(".").substringBefore("$")
+            if (simpleClassName != this::class.java.simpleName) break
         }
 
-        val function = StringBuilder(splitter.iterator().next())
-                .append(".")
-                .append(stackTraceElements[1].methodName)
-                .append("()")
-        return function.toString()
+//        if (customTag.isNotEmpty()) {
+//            stringBuilder.append("[$customTag] ")
+//        }
+//
+//        if (isShowThreadName) {
+//            stringBuilder.append("${Thread.currentThread().name}: ")
+//        }
+
+        stringBuilder.append("$simpleClassName > " +
+                "${stackTrace?.methodName}:${stackTrace?.lineNumber}")
+
+
+        return stringBuilder.toString()
     }
 
-    fun d(message: String) {
+    fun d(message: String = "called") {
         Log.d(getFunction(), message)
     }
 
-    fun e(message: String) {
+    fun e(message: String = "called") {
         Log.e(getFunction(), message)
     }
 }

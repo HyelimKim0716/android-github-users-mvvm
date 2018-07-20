@@ -1,6 +1,9 @@
 package com.githubapi.search.searchgithubusers.data.model
 
+import java.util.*
+
 interface User {
+    var userId: String
     var login: String
     var id: Int
     var node_id: String
@@ -22,4 +25,28 @@ interface User {
 
     var isFavorite: Boolean
     var createdTime: Long
+
+    fun initValue() {
+        userId = UUID.randomUUID().toString()
+        login = ""
+        id = -1
+        node_id = ""
+        avatar_url = ""
+        url = ""
+        html_url = ""
+        followers_url = ""
+        following_url = ""
+        gists_url = ""
+        starred_url = ""
+        subscriptions_url = ""
+        organizations_url = ""
+        repos_url = ""
+        events_url = ""
+        received_events_url = ""
+        type = ""
+        isFavorite = false
+        createdTime = getCurrentTime()
+    }
+
+    fun getCurrentTime() = System.currentTimeMillis()
 }

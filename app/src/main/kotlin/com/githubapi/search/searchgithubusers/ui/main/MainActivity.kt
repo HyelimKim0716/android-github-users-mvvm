@@ -1,8 +1,10 @@
 package com.githubapi.search.searchgithubusers.ui.main
 
 import android.os.Bundle
+import android.support.v4.view.ViewPager
 import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseActivity
+import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.FavoriteUsersFragment
 import com.githubapi.search.searchgithubusers.ui.main.search_user.SearchUsersFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,5 +34,17 @@ class MainActivity : BaseActivity() {
 
         main_viewPager.adapter = fragmentPagerAdapter
         main_tabLayout.setupWithViewPager(main_viewPager)
+        main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) { }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) { }
+
+            override fun onPageSelected(position: Int) {
+                LogMgr.d("position: $position")
+                fragmentPagerAdapter.getItem(position).refresh()
+            }
+
+
+        })
     }
 }

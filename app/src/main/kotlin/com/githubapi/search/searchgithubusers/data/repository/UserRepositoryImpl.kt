@@ -1,13 +1,12 @@
 package com.githubapi.search.searchgithubusers.data.repository
 
+import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.data.model.RealmUserItem
 import com.githubapi.search.searchgithubusers.data.model.User
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.extensions.toRealmUserItem
 import com.githubapi.search.searchgithubusers.extensions.toUserItem
-import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
 import java.util.*
 
@@ -16,15 +15,20 @@ class UserRepositoryImpl(private val realmDatabase: RealmDatabase) : UserReposit
     override fun getAllUsers(): Observable<UserItem>
     = Observable.fromIterable(realmDatabase.findAll(RealmUserItem::class.java))
             .map {
+                LogMgr.d("getAllUsers, ${it.userId}, ${it.id}, ${it.login}")
                 it.toUserItem()
             }
 
 
+    override fun getUser(id: Int, userName: String): Boolean
+        = realmDatabase.getItem(RealmUserItem::class.java,
+            arrayOf(User::id.name to id, User::login.name to userName)) != null
 
     override fun addUserItem(userItem: UserItem): Boolean {
-        realmDatabase.getItem(RealmUserItem::class.java, User::id.name, userItem.id)
+        LogMgr.d("userItem: ${userItem.userId}, id: ${userItem.id}, ${userItem.login}")
+        realmDatabase.getItem(RealmUserItem::class.java, User::userId.name, userItem.userId)
                 ?.let {
-
+                    LogMgr.d("realm has this item already")
                     return false
                 }
 
@@ -34,17 +38,18 @@ class UserRepositoryImpl(private val realmDatabase: RealmDatabase) : UserReposit
             it.printStackTrace()
 
             if (it is RealmPrimaryKeyConstraintException) {
-//                userItem.id = UUID.randomUUID().toString()
-
+                userItem.userId = UUID.randomUUID().toString()
+                realmDatabase.addItem(userItem.toRealmUserItem())
             }
         })
 
         return true
     }
 
-    override fun deleteUserItem(id: Int) {
-        realmDatabase.deleteItem(RealmUserItem::class.java, User::id.name, id)
-    }
+    override fun deleteUserItem(userId: String)
+    = realmDatabase.deleteItem(RealmUserItem::class.java, User::userId.name, userId)
+
+
 
 
 }

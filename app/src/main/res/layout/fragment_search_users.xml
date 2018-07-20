@@ -29,7 +29,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/searchUsers_btnSearch"
-            android:lines="1" />
+            android:lines="1"
+            android:maxLines="1" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/searchUsers_rvUsers"

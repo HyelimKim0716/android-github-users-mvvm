@@ -20,7 +20,7 @@ class SearchUserRecyclerViewHolder(parent: ViewGroup, @Provided val viewModel: S
                 LayoutInflater.from(parent.context).inflate(R.layout.item_search_user_list, parent, false) ) {
 
     override fun onBindViewHolder(userItem: UserItem, position: Int) {
-        binding?.item = userItem
+        binding?.userItem = userItem
 
         Glide.with(context)
                 .load(userItem.avatar_url)
