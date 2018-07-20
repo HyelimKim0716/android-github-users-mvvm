@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseDataBindingFragment
+import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.databinding.FragmentSearchUsersBinding
 import com.githubapi.search.searchgithubusers.ui.main.search_user.search_user_list.SearchUserRecyclerViewAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -52,7 +53,6 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
         binding.viewModel = viewModel
         searchUsers_rvUsers.adapter = adapter
         searchUsers_rvUsers.setHasFixedSize(true)
-
     }
 
     private fun receiveSearchUsersViewEvent(viewEvent: Pair<SearchUsersViewEvent, Any>) {
@@ -69,8 +69,12 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
     }
 
     private fun checkFavoriteUser(position: Int) {
-        viewModel.searchedUserList[position].isFavorite = true
-        adapter.notifyDataSetChanged()
+        LogMgr.d("checkFavoriteUser: position: $position, 1   isFavorite? ${viewModel.searchedUserList[position].isFavorite}")
+
+        viewModel.searchedUserList[position].isFavorite = !viewModel.searchedUserList[position].isFavorite
+        viewModel.addFavoriteUser(position)
+        LogMgr.d("checkFavoriteUser: position: $position, 2   isFavorite? ${viewModel.searchedUserList[position].isFavorite}")
+        adapter.notifyItemChanged(position)
 
     }
 

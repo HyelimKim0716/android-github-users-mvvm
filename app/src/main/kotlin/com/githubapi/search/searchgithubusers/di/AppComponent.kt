@@ -5,6 +5,7 @@ import com.githubapi.search.searchgithubusers.base.BaseApplication
 import com.githubapi.search.searchgithubusers.di.binder.ActivityBindingModule
 import com.githubapi.search.searchgithubusers.di.binder.FragmentBindingModule
 import com.githubapi.search.searchgithubusers.di.data.ApiModule
+import com.githubapi.search.searchgithubusers.di.data.RepositoryModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -18,7 +19,8 @@ import javax.inject.Singleton
         ActivityBindingModule::class,
         FragmentBindingModule::class,
         ViewModelModule::class,
-        ApiModule::class
+        ApiModule::class,
+        RepositoryModule::class
         ))
 interface AppComponent: AndroidInjector<BaseApplication> {
 

@@ -6,7 +6,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseDataBindingViewHolder
-import com.githubapi.search.searchgithubusers.data.model.Item
+import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.ItemSearchUserListBinding
 import com.githubapi.search.searchgithubusers.ui.main.search_user.SearchUsersViewEvent
 import com.githubapi.search.searchgithubusers.ui.main.search_user.SearchUsersViewModel
@@ -16,14 +16,14 @@ import kotlinx.android.synthetic.main.item_search_user_list.view.*
 
 @AutoFactory(implementing = [(SearchUserBaseRecyclerViewHolderFactory::class)])
 class SearchUserRecyclerViewHolder(parent: ViewGroup, @Provided val viewModel: SearchUsersViewModel):
-        BaseDataBindingViewHolder<ItemSearchUserListBinding, Item>(parent,
+        BaseDataBindingViewHolder<ItemSearchUserListBinding, UserItem>(parent,
                 LayoutInflater.from(parent.context).inflate(R.layout.item_search_user_list, parent, false) ) {
 
-    override fun onBindViewHolder(item: Item, position: Int) {
-        binding?.item = item
+    override fun onBindViewHolder(userItem: UserItem, position: Int) {
+        binding?.item = userItem
 
         Glide.with(context)
-                .load(item.avatar_url)
+                .load(userItem.avatar_url)
                 .apply(RequestOptions.circleCropTransform())
                 .into(itemView.searchUserListItem_ivUser)
 

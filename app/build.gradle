@@ -80,6 +80,9 @@ dependencies {
     implementation 'com.google.guava:guava:23.4-android'
     compileOnly 'com.google.auto.factory:auto-factory:1.0-beta5'
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+    implementation('com.google.api-client:google-api-client-android:1.20.0') {
+        exclude module: 'guava-jdk5'
+    }
 
     // Realm
     implementation "io.realm:android-adapters:$realmVersion"

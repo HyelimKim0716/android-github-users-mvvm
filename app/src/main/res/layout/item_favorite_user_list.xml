@@ -2,8 +2,8 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="item"
-            type="com.githubapi.search.searchgithubusers.data.model.Item" />
+            name="userItem"
+            type="com.githubapi.search.searchgithubusers.data.model.UserItem" />
     </data>
     <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

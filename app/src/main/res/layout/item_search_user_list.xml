@@ -2,8 +2,8 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="item"
-            type="com.githubapi.search.searchgithubusers.data.model.Item" />
+            name="userItem"
+            type="com.githubapi.search.searchgithubusers.data.model.UserItem" />
     </data>
     <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,7 +24,7 @@
             android:id="@+id/searchUserListItem_cbFavorite"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
-            android:checked="@{item.isFavorite}"
+            android:checked="@{userItem.isFavorite}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -41,7 +41,7 @@
             app:layout_constraintEnd_toStartOf="@id/searchUserListItem_cbFavorite"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
-            android:text="@{item.login}"
+            android:text="@{userItem.login}"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             />
