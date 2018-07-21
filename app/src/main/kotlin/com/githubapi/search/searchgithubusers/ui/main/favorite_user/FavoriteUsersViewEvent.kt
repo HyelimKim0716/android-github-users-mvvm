@@ -1,9 +1,9 @@
 package com.githubapi.search.searchgithubusers.ui.main.favorite_user
 
 enum class FavoriteUsersViewEvent {
-//    REFRESH_VIEW,
-//    REFRESH_DELETED_ONE_ITEM,
-//    DELETE_ONE_ITEM
-
+    REFRESH_SEARCHED_USER_LIST,
+    GET_ALL_USERS,
+    DELETE_ONE_ITEM,
+    HIDE_KEYBOARD
 
 }

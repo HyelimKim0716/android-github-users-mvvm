@@ -6,7 +6,6 @@ import com.githubapi.search.searchgithubusers.data.api.GithubSearchUserApi
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.data.repository.UserRepository
 import com.githubapi.search.searchgithubusers.extensions.toUserItem
-import com.githubapi.search.searchgithubusers.ui.main.favorite_user.FavoriteUsersViewEvent
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.*
@@ -17,7 +16,6 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
 
     val searchUsersViewEventSender = PublishSubject.create<Pair<SearchUsersViewEvent, Any>>().apply { subscribeOn(Schedulers.io()) }
 
-
     val searchedUserList = ArrayList<UserItem>()
 
     fun sendUsersViewEvent(viewEvent: SearchUsersViewEvent, data: Any) {
@@ -25,8 +23,6 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
     }
 
     fun searchUsers() {
-        println("searchUsers clicked, userName = ${userName.get()}")
-
         sendUsersViewEvent(SearchUsersViewEvent.HIDE_KEYBOARD, 0)
 
         userName.get()?.let {
@@ -37,7 +33,7 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
                         it.items.forEach {
                             println("${it.login}")
                             it.userId = UUID.randomUUID().toString()
-                            it.isFavorite = userRepository.getUser(it.id, it.login)
+                            it.isFavorite = userRepository.getUserWithIdName(it.id, it.login)
                             searchedUserList.add(it.toUserItem())
                         }
 

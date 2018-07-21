@@ -83,8 +83,6 @@ open class RealmDatabase(val context: Context) {
     = getRealm().where(clazz).apply {
 
         equalToList.forEach {
-                LogMgr.d("equalList: ${it.first}, ${it.second}")
-
             when (it.second) {
                 is String -> this.equalTo(it.first, it.second as String)
                 is Int -> this.equalTo(it.first, it.second as Int)
@@ -92,4 +90,24 @@ open class RealmDatabase(val context: Context) {
             }
         }
     }.findFirst()
+
+    fun <T: RealmObject> getContainsFieldValueItems(clazz: Class<T>, fieldName: String, value: String): RealmResults<T>
+    = getContainsFieldValueItems(clazz, arrayOf(fieldName to value))
+
+    fun <T: RealmObject> getContainsFieldValueItems(clazz: Class<T>, fieldName: String, value: String, sortFieldName: String, sort: Sort): RealmResults<T>
+            = getContainsFieldValueItems(clazz, arrayOf(fieldName to value), sortFieldName, sort)
+
+    fun <T: RealmObject> getContainsFieldValueItems(clazz: Class<T>, equalToList: Array<Pair<String, String>>): RealmResults<T>
+    = getRealm().where(clazz).apply {
+        equalToList.forEach {
+            this.contains(it.first, it.second)
+        }
+    }.findAll()
+
+    fun <T: RealmObject> getContainsFieldValueItems(clazz: Class<T>, equalToList: Array<Pair<String, String>>, sortFieldName: String, sort: Sort): RealmResults<T>
+            = getRealm().where(clazz).apply {
+        equalToList.forEach {
+            this.contains(it.first, it.second)
+        }
+    }.sort(sortFieldName, sort).findAll()
 }

@@ -8,7 +8,9 @@ interface UserRepository {
 
     fun getAllUsers(): Observable<UserItem>
 
-    fun getUser(id: Int, userName: String): Boolean
+    fun getUserWithIdName(id: Int, userName: String): Boolean
+
+    fun getUsersWithName(userName: String): List<UserItem>
 
     fun addUserItem(userItem: UserItem): Boolean
 

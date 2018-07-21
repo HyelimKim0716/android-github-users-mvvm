@@ -1,13 +1,13 @@
 package com.githubapi.search.searchgithubusers.ui.main.search_user
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseDataBindingFragment
 import com.githubapi.search.searchgithubusers.common.LogMgr
+import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.FragmentSearchUsersBinding
+import com.githubapi.search.searchgithubusers.extensions.hideKeyboard
 import com.githubapi.search.searchgithubusers.ui.main.MainViewEvent
 import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.search_user.search_user_list.SearchUserRecyclerViewAdapter
@@ -22,7 +22,7 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
     lateinit var mainViewModel: MainViewModel
 
     @Inject
-    lateinit var viewModel: SearchUsersViewModel
+    lateinit var searchUsersViewModel: SearchUsersViewModel
 
     @Inject
     lateinit var adapter: SearchUserRecyclerViewAdapter
@@ -44,7 +44,7 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
     }
 
     private fun bind() {
-        disposables.add(viewModel.searchUsersViewEventSender.observeOn(AndroidSchedulers.mainThread()).subscribe(::receiveSearchUsersViewEvent))
+        disposables.add(searchUsersViewModel.searchUsersViewEventSender.observeOn(AndroidSchedulers.mainThread()).subscribe(::receiveSearchUsersViewEvent))
         disposables.add(mainViewModel.mainViewEventSender.observeOn(AndroidSchedulers.mainThread()).subscribe(::receiveMainViewEvent))
     }
 
@@ -56,7 +56,7 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewModel = viewModel
+        binding.viewModel = searchUsersViewModel
         searchUsers_rvUsers.adapter = adapter
         searchUsers_rvUsers.setHasFixedSize(true)
     }
@@ -64,7 +64,7 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
 
     private fun receiveMainViewEvent(viewEvent: Pair<MainViewEvent, Any>) {
         when (viewEvent.first) {
-            MainViewEvent.DELETE_ONE_ITEM -> if (viewEvent.second is Int) refreshDeletedOneItem(viewEvent.second as Int)
+            MainViewEvent.REFRESH_DELETED_ONE_ITEM -> if (viewEvent.second is UserItem) refreshDeletedOneItem(viewEvent.second as UserItem)
             else -> { }
         }
     }
@@ -73,7 +73,7 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
         when (viewEvent.first) {
             SearchUsersViewEvent.REFRESH_USER_LIST -> refreshUserList()
             SearchUsersViewEvent.CHECK_FAVORITE_USER -> if (viewEvent.second is Int) checkFavoriteUser(viewEvent.second as Int)
-            SearchUsersViewEvent.HIDE_KEYBOARD -> hideKeyboard()
+            SearchUsersViewEvent.HIDE_KEYBOARD -> searchUsers_etUserName.hideKeyboard(activity)
             else -> { }
         }
     }
@@ -86,10 +86,12 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
         adapter.notifyDataSetChanged()
     }
 
-    private fun refreshDeletedOneItem(position: Int) {
-        viewModel.searchedUserList.forEachIndexed { index, user ->
-            if (user.userId == mainViewModel.userList[position].userId) {
-                user.isFavorite = false
+    private fun refreshDeletedOneItem(deletedUserItem: UserItem) {
+        LogMgr.d()
+        searchUsersViewModel.searchedUserList.forEachIndexed { index, favoriteUserItem ->
+
+            if (favoriteUserItem.userId == deletedUserItem.userId) {
+                favoriteUserItem.isFavorite = false
                 adapter.notifyItemChanged(index)
                 return
             }
@@ -98,20 +100,15 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
     }
 
     private fun checkFavoriteUser(position: Int) {
-        viewModel.searchedUserList[position].isFavorite = !viewModel.searchedUserList[position].isFavorite
+        searchUsersViewModel.searchedUserList[position].isFavorite = !searchUsersViewModel.searchedUserList[position].isFavorite
         adapter.notifyItemChanged(position)
 
-        if (viewModel.searchedUserList[position].isFavorite)
-            mainViewModel.addFavoriteUser(viewModel.searchedUserList[position])
+        if (searchUsersViewModel.searchedUserList[position].isFavorite)
+            mainViewModel.addFavoriteUser(searchUsersViewModel.searchedUserList[position])
         else
-            mainViewModel.deleteOneItem(position, viewModel.searchedUserList[position])
+            mainViewModel.deleteOneItem(searchUsersViewModel.searchedUserList[position])
 
     }
 
-
-    private fun hideKeyboard() {
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(searchUsers_etUserName.windowToken, 0)
-    }
 
 }

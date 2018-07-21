@@ -21,14 +21,20 @@ class MainViewModel(private val userRepository: UserRepository) {
     fun addFavoriteUser(userItem: UserItem) {
         userRepository.addUserItem(userItem)
         userList.add(userItem)
+        sendMainViewEvent(MainViewEvent.REFRESH_ADDED_ONE_USER_LIST, userItem)
     }
 
-    fun deleteOneItem(position: Int, userItem: UserItem) {
+    fun deleteOneItem(userItem: UserItem) {
+
+        userList.forEach {
+            if (it.userId == userItem.userId)
+                it.isFavorite = false
+        }
+
         userRepository.deleteUserItem(userItem.userId).subscribe({
-            LogMgr.d("delete ${userItem.login} item completed")
 
             userList.remove(userItem)
-            sendMainViewEvent(MainViewEvent.REFRESH_DELETED_ONE_ITEM, position)
+            sendMainViewEvent(MainViewEvent.REFRESH_DELETED_ONE_ITEM, userItem)
         }, {
             it.printStackTrace()
             LogMgr.e("getAllFavoriteUsers Failed. Error: ${it.message}")
@@ -41,13 +47,12 @@ class MainViewModel(private val userRepository: UserRepository) {
         userList.clear()
         userRepository.getAllUsers().subscribe({
             userList.add(it)
-            LogMgr.d("$${it.login}, ${it.login}")
         }, {
             it.printStackTrace()
             LogMgr.e("getAllFavoriteUsers Failed. Error: ${it.message}")
         }, {
             LogMgr.d("Getting all favorite users is completed, userList: ${userList.size}")
-            sendMainViewEvent(MainViewEvent.REFRESH_VIEW, 0)
+            sendMainViewEvent(MainViewEvent.REFRESH_All_FAVORITE_USER_LIST, 0)
         })
     }
 

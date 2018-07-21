@@ -6,7 +6,9 @@ import android.view.View
 import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseDataBindingFragment
 import com.githubapi.search.searchgithubusers.common.LogMgr
+import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.FragmentFavoriteUsersBinding
+import com.githubapi.search.searchgithubusers.extensions.hideKeyboard
 import com.githubapi.search.searchgithubusers.ui.main.MainViewEvent
 import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.favorite_user_list.FavoriteUserRecyclerViewAdapter
@@ -21,7 +23,7 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
     lateinit var mainViewModel: MainViewModel
 
     @Inject
-    lateinit var viewModel: FavoriteUsersViewModel
+    lateinit var favoriteUsersViewModel: FavoriteUsersViewModel
 
     @Inject
     lateinit var adapter: FavoriteUserRecyclerViewAdapter
@@ -35,6 +37,7 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
     override fun onResume() {
         LogMgr.d()
         bind()
+        mainViewModel.getAllFavoriteUsers()
 
         super.onResume()
     }
@@ -46,8 +49,9 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
         super.onPause()
     }
 
+
     private fun bind() {
-        disposables.add(viewModel.favoriteUsersViewEventSender.observeOn(AndroidSchedulers.mainThread()).subscribe(::receiveViewEvent))
+        disposables.add(favoriteUsersViewModel.favoriteUsersViewEventSender.observeOn(AndroidSchedulers.mainThread()).subscribe(::receiveFavoriteUsersViewEvent))
         disposables.add(mainViewModel.mainViewEventSender.observeOn(AndroidSchedulers.mainThread()).subscribe(::receiveMainViewEvent))
 
     }
@@ -61,44 +65,77 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
 
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewModel = viewModel
+        binding.viewModel = favoriteUsersViewModel
         favoriteUsers_rvFavoriteUsers.layoutManager = GridLayoutManager(context, 3)
         favoriteUsers_rvFavoriteUsers.adapter = adapter
-
-        refresh()
     }
 
     override fun refresh() {
-        mainViewModel.getAllFavoriteUsers()
+        refreshSearchedUserList()
     }
 
     private fun receiveMainViewEvent(viewEvent: Pair<MainViewEvent, Any>) {
         when (viewEvent.first) {
-            MainViewEvent.REFRESH_VIEW -> refreshFavoriteUsers()
-            MainViewEvent.REFRESH_DELETED_ONE_ITEM -> if (viewEvent.second is Int) refreshDeletedOneItem(viewEvent.second as Int)
-            MainViewEvent.DELETE_ONE_ITEM -> if (viewEvent.second is Int) deleteOneItem(viewEvent.second as Int)
+            MainViewEvent.REFRESH_All_FAVORITE_USER_LIST -> refreshAllFavoriteUsers()
+            MainViewEvent.REFRESH_ADDED_ONE_USER_LIST -> if (viewEvent.second is UserItem) refreshAddedOneUserList(viewEvent.second as UserItem)
+            MainViewEvent.REFRESH_DELETED_ONE_ITEM -> if (viewEvent.second is UserItem) refreshDeletedOneItem(viewEvent.second as UserItem)
             else -> {}
         }
     }
 
-    private fun receiveViewEvent(viewEvent: Pair<FavoriteUsersViewEvent, Any>) {
+    private fun receiveFavoriteUsersViewEvent(viewEvent: Pair<FavoriteUsersViewEvent, Any>) {
         when (viewEvent.first) {
+            FavoriteUsersViewEvent.GET_ALL_USERS -> refresh()
+            FavoriteUsersViewEvent.REFRESH_SEARCHED_USER_LIST -> refreshSearchedUserList()
+            FavoriteUsersViewEvent.DELETE_ONE_ITEM -> if (viewEvent.second is Int) deleteOneItem(viewEvent.second as Int)
+            FavoriteUsersViewEvent.HIDE_KEYBOARD -> favoriteUsers_etUserName.hideKeyboard(activity)
         }
     }
 
-    private fun refreshDeletedOneItem(position: Int) {
-        adapter.notifyItemRemoved(position)
+    private fun refreshDeletedOneItem(deletedUserItem: UserItem) {
+        var deletedPositionIndex = -1
+        favoriteUsersViewModel.searchedFavoriteUserList.forEachIndexed { index, favoriteUserItem ->
+
+            if (favoriteUserItem.userId == deletedUserItem.userId) {
+                favoriteUserItem.isFavorite = false
+                deletedPositionIndex = index
+                return@forEachIndexed
+            }
+        }
+
+        if (deletedPositionIndex >= 0) {
+            favoriteUsersViewModel.searchedFavoriteUserList.removeAt(deletedPositionIndex)
+            adapter.notifyItemRemoved(deletedPositionIndex)
+        }
+
     }
 
-    private fun refreshFavoriteUsers() {
+    private fun refreshAllFavoriteUsers() {
+        favoriteUsersViewModel.searchedFavoriteUserList.clear()
+        favoriteUsersViewModel.searchedFavoriteUserList.addAll(mainViewModel.userList)
+
         adapter.notifyDataSetChanged()
     }
 
-    private fun deleteOneItem(position: Int) {
-        mainViewModel.userList[position].isFavorite = !mainViewModel.userList[position].isFavorite
-        adapter.notifyItemChanged(position)
+    private fun refreshAddedOneUserList(userItem: UserItem) {
+        favoriteUsersViewModel.searchedFavoriteUserList.add(userItem)
+        adapter.notifyItemInserted(favoriteUsersViewModel.searchedFavoriteUserList.size.minus(1))
+    }
 
-        if (!mainViewModel.userList[position].isFavorite)
-            mainViewModel.deleteOneItem(position, mainViewModel.userList[position])
+    private fun deleteOneItem(position: Int) {
+        val favoriteItem = favoriteUsersViewModel.searchedFavoriteUserList[position]
+
+        favoriteItem.isFavorite = !favoriteItem.isFavorite
+
+        if (!favoriteItem.isFavorite)
+            mainViewModel.deleteOneItem(favoriteItem)
+
+        favoriteUsersViewModel.searchedFavoriteUserList.removeAt(position)
+        adapter.notifyItemRemoved(position)
+
+    }
+
+    private fun refreshSearchedUserList() {
+        adapter.notifyDataSetChanged()
     }
 }

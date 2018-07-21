@@ -16,13 +16,13 @@ import javax.inject.Provider
 class FavoriteUsersModule {
 
     @Provides
-    fun provideFavoriteUserRecyclerViewAdapter(viewModel: MainViewModel,
+    fun provideFavoriteUserRecyclerViewAdapter(viewModel: FavoriteUsersViewModel,
                                                viewHolderFactories: Map<Int, @JvmSuppressWildcards FavoriteUserBaseRecyclerViewHolderFactory>)
     = FavoriteUserRecyclerViewAdapter(viewModel, viewHolderFactories)
 
     @Provides
     @IntoMap
     @IntKey(FavoriteUserRecyclerViewHolderType.DEFALUT)
-    fun provideFavoriteUserRecyclerViewHolder(viewModelProvider: Provider<MainViewModel>): FavoriteUserBaseRecyclerViewHolderFactory
+    fun provideFavoriteUserRecyclerViewHolder(viewModelProvider: Provider<FavoriteUsersViewModel>): FavoriteUserBaseRecyclerViewHolderFactory
             = FavoriteUserRecyclerViewHolderFactory(viewModelProvider)
 }

@@ -9,7 +9,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/default_padding">
+        android:padding="@dimen/default_padding" >
 
         <Button
             android:id="@+id/searchUsers_btnSearch"
@@ -18,8 +18,7 @@
             android:background="@drawable/selector_btn_search"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{() -> viewModel.searchUsers()}"
-            />
+            android:onClick="@{() -> viewModel.searchUsers()}" />
 
         <EditText
             android:id="@+id/searchUsers_etUserName"
@@ -43,8 +42,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             android:scrollbars="vertical" />
-
-
 
     </android.support.constraint.ConstraintLayout>
 </layout>
