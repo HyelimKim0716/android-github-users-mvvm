@@ -8,14 +8,14 @@ import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseDataBindingViewHolder
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.ItemFavoriteUserListBinding
-import com.githubapi.search.searchgithubusers.ui.main.favorite_user.FavoriteUsersViewEvent
-import com.githubapi.search.searchgithubusers.ui.main.favorite_user.FavoriteUsersViewModel
+import com.githubapi.search.searchgithubusers.ui.main.MainViewEvent
+import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.google.auto.factory.AutoFactory
 import com.google.auto.factory.Provided
 import kotlinx.android.synthetic.main.item_favorite_user_list.view.*
 
 @AutoFactory(implementing = [(FavoriteUserBaseRecyclerViewHolderFactory::class)])
-class FavoriteUserRecyclerViewHolder(parent: ViewGroup, @Provided private val viewModel: FavoriteUsersViewModel)
+class FavoriteUserRecyclerViewHolder(parent: ViewGroup, @Provided private val viewModel: MainViewModel)
     : BaseDataBindingViewHolder<ItemFavoriteUserListBinding, UserItem>(parent, LayoutInflater.from(parent.context).inflate(R.layout.item_favorite_user_list, parent, false)) {
 
     override fun onBindViewHolder(userItem: UserItem, position: Int) {
@@ -27,7 +27,7 @@ class FavoriteUserRecyclerViewHolder(parent: ViewGroup, @Provided private val vi
                 .into(itemView.favoriteUserListItem_ivUser)
 
         itemView.favoriteUserListItem_cbDeleteFavorite.setOnClickListener {
-            viewModel.sendFavoriteUsersViewEvent(FavoriteUsersViewEvent.DELETE_ONE_ITEM, adapterPosition)
+            viewModel.sendMainViewEvent(MainViewEvent.DELETE_ONE_ITEM, adapterPosition)
         }
 
     }

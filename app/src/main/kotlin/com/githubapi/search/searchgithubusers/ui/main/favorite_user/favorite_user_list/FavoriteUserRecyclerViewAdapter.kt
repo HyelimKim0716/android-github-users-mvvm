@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import com.githubapi.search.searchgithubusers.base.BaseRecyclerViewAdapter
 import com.githubapi.search.searchgithubusers.base.BaseViewHolder
 import com.githubapi.search.searchgithubusers.data.model.UserItem
-import com.githubapi.search.searchgithubusers.ui.main.favorite_user.FavoriteUsersViewModel
+import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 
-class FavoriteUserRecyclerViewAdapter(private val viewModel: FavoriteUsersViewModel,
+class FavoriteUserRecyclerViewAdapter(private val viewModel: MainViewModel,
                                       private val viewHolderFactories
                                       : Map<Int, @JvmSuppressWildcards FavoriteUserBaseRecyclerViewHolderFactory>)
     : BaseRecyclerViewAdapter<BaseViewHolder<UserItem>>() {

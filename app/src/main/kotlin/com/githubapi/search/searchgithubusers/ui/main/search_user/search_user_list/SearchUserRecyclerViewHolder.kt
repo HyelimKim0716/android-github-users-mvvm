@@ -28,7 +28,7 @@ class SearchUserRecyclerViewHolder(parent: ViewGroup, @Provided val viewModel: S
                 .into(itemView.searchUserListItem_ivUser)
 
         itemView.setOnClickListener { viewModel.sendUsersViewEvent(SearchUsersViewEvent.CHECK_FAVORITE_USER, adapterPosition) }
-
+        itemView.searchUserListItem_cbFavorite.setOnClickListener { viewModel.sendUsersViewEvent(SearchUsersViewEvent.CHECK_FAVORITE_USER, adapterPosition) }
     }
 
 }

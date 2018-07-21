@@ -41,10 +41,6 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
                             searchedUserList.add(it.toUserItem())
                         }
 
-
-//                        searchedUserList.addAll(it.userItems)
-
-
                     }, {
                         it.printStackTrace()
                         println("Get users error: ${it.message}")
@@ -53,21 +49,5 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
                         sendUsersViewEvent(SearchUsersViewEvent.REFRESH_USER_LIST, 0)
                     })
         }
-    }
-
-    fun addFavoriteUser(position: Int) {
-        userRepository.addUserItem(searchedUserList[position])
-    }
-
-    fun deleteOneItem(position: Int) {
-        userRepository.deleteUserItem(searchedUserList[position].userId).subscribe({
-            LogMgr.d("delete $position item completed")
-
-            sendUsersViewEvent(SearchUsersViewEvent.REFRESH_ONE_ITEM, position)
-        }, {
-            it.printStackTrace()
-            LogMgr.e("getAllFavoriteUsers Failed. Error: ${it.message}")
-        })
-
     }
 }

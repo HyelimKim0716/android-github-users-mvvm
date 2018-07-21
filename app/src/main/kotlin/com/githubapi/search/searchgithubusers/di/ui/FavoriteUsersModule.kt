@@ -1,5 +1,6 @@
 package com.githubapi.search.searchgithubusers.di.ui
 
+import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.FavoriteUsersViewModel
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.favorite_user_list.FavoriteUserBaseRecyclerViewHolderFactory
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.favorite_user_list.FavoriteUserRecyclerViewAdapter
@@ -15,13 +16,13 @@ import javax.inject.Provider
 class FavoriteUsersModule {
 
     @Provides
-    fun provideFavoriteUserRecyclerViewAdapter(viewModel: FavoriteUsersViewModel,
+    fun provideFavoriteUserRecyclerViewAdapter(viewModel: MainViewModel,
                                                viewHolderFactories: Map<Int, @JvmSuppressWildcards FavoriteUserBaseRecyclerViewHolderFactory>)
     = FavoriteUserRecyclerViewAdapter(viewModel, viewHolderFactories)
 
     @Provides
     @IntoMap
     @IntKey(FavoriteUserRecyclerViewHolderType.DEFALUT)
-    fun provideFavoriteUserRecyclerViewHolder(viewModelProvider: Provider<FavoriteUsersViewModel>): FavoriteUserBaseRecyclerViewHolderFactory
+    fun provideFavoriteUserRecyclerViewHolder(viewModelProvider: Provider<MainViewModel>): FavoriteUserBaseRecyclerViewHolderFactory
             = FavoriteUserRecyclerViewHolderFactory(viewModelProvider)
 }

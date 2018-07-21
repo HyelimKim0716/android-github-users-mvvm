@@ -11,8 +11,6 @@ class SearchUserRecyclerViewAdapter(private val viewModel: SearchUsersViewModel,
                                     : Map<Int, @JvmSuppressWildcards SearchUserBaseRecyclerViewHolderFactory>)
     : BaseRecyclerViewAdapter<BaseViewHolder<UserItem>>() {
 
-    var preCheckedPosition = -1
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<UserItem>
     = viewHolderFactories[viewType]?.createSearchUserViewHolder(parent) ?: SearchUserRecyclerViewHolder(parent, viewModel)
 
