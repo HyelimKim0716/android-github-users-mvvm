@@ -30,7 +30,7 @@ data class Item(override var userId: String = "",
     }
 }
 
-data class UserItem(override var userId: String = "") : User {
+data class UserItem(override var userId: String = "") : User, Comparable<UserItem> {
     override lateinit var login: String
     override var id: Int = -1
     override lateinit var node_id: String
@@ -52,5 +52,9 @@ data class UserItem(override var userId: String = "") : User {
 
     init {
         initValue()
+    }
+
+    override fun compareTo(other: UserItem): Int {
+        return login.toLowerCase().compareTo(other.login.toLowerCase())
     }
 }

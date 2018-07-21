@@ -17,8 +17,6 @@ class SearchUserRecyclerViewAdapter(private val viewModel: SearchUsersViewModel,
     override fun getItemCount(): Int = viewModel.searchedUserList.size
 
     override fun onBindViewHolder(holder: BaseViewHolder<UserItem>, position: Int) {
-
         holder.onBindViewHolder(viewModel.searchedUserList[position], position)
     }
-
 }

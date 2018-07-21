@@ -1,5 +1,6 @@
 package com.githubapi.search.searchgithubusers.di.ui
 
+import com.githubapi.search.searchgithubusers.ui.StickyItemDecoration
 import com.githubapi.search.searchgithubusers.ui.main.search_user.SearchUsersViewModel
 import com.githubapi.search.searchgithubusers.ui.main.search_user.search_user_list.SearchUserRecyclerViewAdapter
 import com.githubapi.search.searchgithubusers.ui.main.search_user.search_user_list.SearchUserBaseRecyclerViewHolderFactory
@@ -23,4 +24,8 @@ class SearchUsersModule {
     @IntKey(SearchUserRecyclerViewHolderType.DEFALUT)
     fun provideSearchUserRecyclerViewHolder(viewModelProvider: Provider<SearchUsersViewModel>): SearchUserBaseRecyclerViewHolderFactory
     = SearchUserRecyclerViewHolderFactory(viewModelProvider)
+
+    @Provides
+    fun provideItemDecoration(): StickyItemDecoration = StickyItemDecoration()
+
 }

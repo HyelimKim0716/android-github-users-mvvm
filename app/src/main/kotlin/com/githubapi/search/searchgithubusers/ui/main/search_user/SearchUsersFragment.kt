@@ -4,10 +4,14 @@ import android.os.Bundle
 import android.view.View
 import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseDataBindingFragment
+import com.githubapi.search.searchgithubusers.base.BaseItemDecoration
 import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.FragmentSearchUsersBinding
 import com.githubapi.search.searchgithubusers.extensions.hideKeyboard
+import com.githubapi.search.searchgithubusers.ui.StickyHeaderInterface
+import com.githubapi.search.searchgithubusers.ui.StickyItemDecoration
+import com.githubapi.search.searchgithubusers.ui.StickyItemDecorationCallback
 import com.githubapi.search.searchgithubusers.ui.main.MainViewEvent
 import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.search_user.search_user_list.SearchUserRecyclerViewAdapter
@@ -16,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_search_users.*
 import javax.inject.Inject
 
-class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>() {
+class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>() {
 
     @Inject
     lateinit var mainViewModel: MainViewModel
@@ -26,6 +30,9 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
 
     @Inject
     lateinit var adapter: SearchUserRecyclerViewAdapter
+
+    @Inject
+    lateinit var itemDecoration: StickyItemDecoration
 
     override val TAG: String? = this::class.simpleName
 
@@ -58,14 +65,16 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
 
         binding.viewModel = searchUsersViewModel
         searchUsers_rvUsers.adapter = adapter
-        searchUsers_rvUsers.setHasFixedSize(true)
-    }
 
+        itemDecoration.stickyItemDecorationCallback = decorationCallback
+        searchUsers_rvUsers.addItemDecoration(itemDecoration)
+    }
 
     private fun receiveMainViewEvent(viewEvent: Pair<MainViewEvent, Any>) {
         when (viewEvent.first) {
             MainViewEvent.REFRESH_DELETED_ONE_ITEM -> if (viewEvent.second is UserItem) refreshDeletedOneItem(viewEvent.second as UserItem)
-            else -> { }
+            else -> {
+            }
         }
     }
 
@@ -74,7 +83,8 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
             SearchUsersViewEvent.REFRESH_USER_LIST -> refreshUserList()
             SearchUsersViewEvent.CHECK_FAVORITE_USER -> if (viewEvent.second is Int) checkFavoriteUser(viewEvent.second as Int)
             SearchUsersViewEvent.HIDE_KEYBOARD -> searchUsers_etUserName.hideKeyboard(activity)
-            else -> { }
+            else -> {
+            }
         }
     }
 
@@ -110,5 +120,19 @@ class SearchUsersFragment: BaseDataBindingFragment<FragmentSearchUsersBinding>()
 
     }
 
+    private val decorationCallback: StickyItemDecorationCallback = object : StickyItemDecorationCallback {
+        override fun isSection(position: Int): Boolean {
+            return position == 0
+                    || searchUsersViewModel
+                    .searchedUserList[position]
+                    .login.toCharArray()[0].toLowerCase() != searchUsersViewModel
+                    .searchedUserList[position.minus(1)]
+                    .login.toCharArray()[0].toLowerCase()
+        }
 
+        override fun getSectionHeader(position: Int): CharSequence {
+            return searchUsersViewModel.searchedUserList[position].login.subSequence(0, 1)
+        }
+
+    }
 }

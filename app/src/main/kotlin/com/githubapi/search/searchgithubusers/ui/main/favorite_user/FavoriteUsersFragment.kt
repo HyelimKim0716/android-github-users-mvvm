@@ -9,6 +9,8 @@ import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.FragmentFavoriteUsersBinding
 import com.githubapi.search.searchgithubusers.extensions.hideKeyboard
+import com.githubapi.search.searchgithubusers.ui.StickyItemDecoration
+import com.githubapi.search.searchgithubusers.ui.StickyItemDecorationCallback
 import com.githubapi.search.searchgithubusers.ui.main.MainViewEvent
 import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.favorite_user_list.FavoriteUserRecyclerViewAdapter
@@ -137,5 +139,21 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
 
     private fun refreshSearchedUserList() {
         adapter.notifyDataSetChanged()
+    }
+
+    private val decorationCallback: StickyItemDecorationCallback = object : StickyItemDecorationCallback {
+        override fun isSection(position: Int): Boolean {
+            return position == 0
+                    || favoriteUsersViewModel
+                    .searchedFavoriteUserList[position]
+                    .login.toCharArray()[0].toLowerCase() != favoriteUsersViewModel
+                    .searchedFavoriteUserList[position.minus(1)]
+                    .login.toCharArray()[0].toLowerCase()
+        }
+
+        override fun getSectionHeader(position: Int): CharSequence {
+            return favoriteUsersViewModel.searchedFavoriteUserList[position].login.subSequence(0, 1)
+        }
+
     }
 }

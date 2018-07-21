@@ -37,6 +37,8 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
                             searchedUserList.add(it.toUserItem())
                         }
 
+                        searchedUserList.sort()
+
                     }, {
                         it.printStackTrace()
                         println("Get users error: ${it.message}")
