@@ -7,8 +7,9 @@
     <color name="green_700">#018B69</color>     <!-- Small -->
     <color name="green_50">#E7F5F2</color>     <!-- Contents -->
 
-    <color name="colorPrimary">@color/green_500</color>
-    <color name="colorPrimaryDark">@color/green_700</color>
+    <color name="githubStatusBar">#25292e</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
 
 </resources>

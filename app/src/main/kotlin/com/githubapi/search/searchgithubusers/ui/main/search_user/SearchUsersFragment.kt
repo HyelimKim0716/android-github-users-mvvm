@@ -2,16 +2,16 @@ package com.githubapi.search.searchgithubusers.ui.main.search_user
 
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseDataBindingFragment
-import com.githubapi.search.searchgithubusers.base.BaseItemDecoration
 import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.FragmentSearchUsersBinding
 import com.githubapi.search.searchgithubusers.extensions.hideKeyboard
-import com.githubapi.search.searchgithubusers.ui.StickyHeaderInterface
-import com.githubapi.search.searchgithubusers.ui.StickyItemDecoration
-import com.githubapi.search.searchgithubusers.ui.StickyItemDecorationCallback
+import com.githubapi.search.searchgithubusers.ui.adapter.StickyItemDecoration
+import com.githubapi.search.searchgithubusers.ui.adapter.StickyItemDecorationCallback
 import com.githubapi.search.searchgithubusers.ui.main.MainViewEvent
 import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.search_user.search_user_list.SearchUserRecyclerViewAdapter
@@ -64,6 +64,7 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewModel = searchUsersViewModel
+        searchUsers_etUserName.setOnEditorActionListener(editorActionListener)
         searchUsers_rvUsers.adapter = adapter
 
         itemDecoration.stickyItemDecorationCallback = decorationCallback
@@ -73,8 +74,7 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
     private fun receiveMainViewEvent(viewEvent: Pair<MainViewEvent, Any>) {
         when (viewEvent.first) {
             MainViewEvent.REFRESH_DELETED_ONE_ITEM -> if (viewEvent.second is UserItem) refreshDeletedOneItem(viewEvent.second as UserItem)
-            else -> {
-            }
+            else -> { }
         }
     }
 
@@ -83,8 +83,6 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
             SearchUsersViewEvent.REFRESH_USER_LIST -> refreshUserList()
             SearchUsersViewEvent.CHECK_FAVORITE_USER -> if (viewEvent.second is Int) checkFavoriteUser(viewEvent.second as Int)
             SearchUsersViewEvent.HIDE_KEYBOARD -> searchUsers_etUserName.hideKeyboard(activity)
-            else -> {
-            }
         }
     }
 
@@ -98,10 +96,10 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
 
     private fun refreshDeletedOneItem(deletedUserItem: UserItem) {
         LogMgr.d()
-        searchUsersViewModel.searchedUserList.forEachIndexed { index, favoriteUserItem ->
-
-            if (favoriteUserItem.userId == deletedUserItem.userId) {
-                favoriteUserItem.isFavorite = false
+        searchUsersViewModel.searchedUserList.forEachIndexed { index, searchedUserItem ->
+            LogMgr.d("deleted item index = $index, deietedUserName: ${deletedUserItem.login}, ${searchedUserItem.login}, deleted: ${deletedUserItem.userId}, ${searchedUserItem.userId}, same? ${deletedUserItem.userId == searchedUserItem.userId} ")
+            if (searchedUserItem.userId == deletedUserItem.userId) {
+                searchedUserItem.isFavorite = false
                 adapter.notifyItemChanged(index)
                 return
             }
@@ -118,6 +116,14 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
         else
             mainViewModel.deleteOneItem(searchUsersViewModel.searchedUserList[position])
 
+    }
+
+
+    private val editorActionListener = TextView.OnEditorActionListener { v, actionId, event ->
+        if (actionId == EditorInfo.IME_ACTION_DONE)
+            searchUsersViewModel.searchUsers()
+
+        false
     }
 
     private val decorationCallback: StickyItemDecorationCallback = object : StickyItemDecorationCallback {

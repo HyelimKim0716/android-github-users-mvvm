@@ -3,14 +3,15 @@ package com.githubapi.search.searchgithubusers.ui.main.favorite_user
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseDataBindingFragment
 import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.FragmentFavoriteUsersBinding
 import com.githubapi.search.searchgithubusers.extensions.hideKeyboard
-import com.githubapi.search.searchgithubusers.ui.StickyItemDecoration
-import com.githubapi.search.searchgithubusers.ui.StickyItemDecorationCallback
+import com.githubapi.search.searchgithubusers.ui.adapter.StickyItemDecorationCallback
 import com.githubapi.search.searchgithubusers.ui.main.MainViewEvent
 import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.favorite_user_list.FavoriteUserRecyclerViewAdapter
@@ -68,6 +69,7 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewModel = favoriteUsersViewModel
+        favoriteUsers_etUserName.setOnEditorActionListener(editorActionListener)
         favoriteUsers_rvFavoriteUsers.layoutManager = GridLayoutManager(context, 3)
         favoriteUsers_rvFavoriteUsers.adapter = adapter
     }
@@ -121,7 +123,8 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
 
     private fun refreshAddedOneUserList(userItem: UserItem) {
         favoriteUsersViewModel.searchedFavoriteUserList.add(userItem)
-        adapter.notifyItemInserted(favoriteUsersViewModel.searchedFavoriteUserList.size.minus(1))
+        favoriteUsersViewModel.searchedFavoriteUserList.sort()
+        adapter.notifyDataSetChanged()
     }
 
     private fun deleteOneItem(position: Int) {
@@ -139,6 +142,13 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
 
     private fun refreshSearchedUserList() {
         adapter.notifyDataSetChanged()
+    }
+
+    private val editorActionListener = TextView.OnEditorActionListener { v, actionId, event ->
+        if (actionId == EditorInfo.IME_ACTION_DONE)
+            favoriteUsersViewModel.searchFavoriteUsers()
+
+        false
     }
 
     private val decorationCallback: StickyItemDecorationCallback = object : StickyItemDecorationCallback {

@@ -25,6 +25,7 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
     fun searchUsers() {
         sendUsersViewEvent(SearchUsersViewEvent.HIDE_KEYBOARD, 0)
 
+        searchedUserList.clear()
         userName.get()?.let {
             searchUsersApi.searchUsers(it)
                     .subscribe({

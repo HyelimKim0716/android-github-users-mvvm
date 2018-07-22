@@ -1,4 +1,4 @@
-package com.githubapi.search.searchgithubusers.ui
+package com.githubapi.search.searchgithubusers.ui.adapter
 
 import android.graphics.Canvas
 import android.graphics.Rect
@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.recycler_view_sticky_header_decoration.vie
 class StickyItemDecoration : RecyclerView.ItemDecoration() {
 
     lateinit var stickyItemDecorationCallback: StickyItemDecorationCallback
-    private lateinit var headerView: View
+    private var headerView: View ?= null
 
     override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
         super.getItemOffsets(outRect, view, parent, state)
@@ -32,7 +32,7 @@ class StickyItemDecoration : RecyclerView.ItemDecoration() {
         parent ?: return
         parent.getChildAt(0) ?: return
 
-        headerView = inflateHeaderView(parent).apply {
+        headerView = headerView ?: inflateHeaderView(parent).apply {
             fixLayoutSize(parent, this)
         }
 
@@ -44,14 +44,17 @@ class StickyItemDecoration : RecyclerView.ItemDecoration() {
             val position = parent.getChildAdapterPosition(child)
 
             val title = stickyItemDecorationCallback.getSectionHeader(position).toString().toUpperCase()
-            headerView.stickyHeader_tvHeader?.text = title
+            headerView?.stickyHeader_tvHeader?.text = title
 
             if (previousHeader.toString().toUpperCase() != title
                     || stickyItemDecorationCallback.isSection(position)) {
 
                 canvas ?: return
 
-                drawHeader(canvas, child, headerView)
+                headerView?.let {
+                    drawHeader(canvas, child, it)
+                }
+
                 previousHeader = title
             }
         }
@@ -61,20 +64,6 @@ class StickyItemDecoration : RecyclerView.ItemDecoration() {
     private fun drawHeader(canvas: Canvas, child: View, headerView: View) {
         canvas.save()
         canvas.translate(0f, Math.max(0, child.top.minus(headerView.height)).toFloat())
-        headerView.draw(canvas)
-        canvas.restore()
-    }
-
-    private fun drawHeader(canvas: Canvas, header: View) {
-        canvas.save()
-        canvas.translate(0F, 0F)
-        header.draw(canvas)
-        canvas.restore()
-    }
-
-    private fun moveHeader(canvas: Canvas, currentHeader: View) {
-        canvas.save()
-        canvas.translate(0F, currentHeader.top.minus(headerView.height).toFloat())
         headerView.draw(canvas)
         canvas.restore()
     }

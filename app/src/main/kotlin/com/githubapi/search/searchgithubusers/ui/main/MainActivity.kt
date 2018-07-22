@@ -1,6 +1,7 @@
 package com.githubapi.search.searchgithubusers.ui.main
 
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v4.view.ViewPager
 import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseActivity
@@ -12,19 +13,23 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
-//    @Inject
-//    lateinit var fragmentPagerAdapter: MainTabFragmentPagerAdapter
-
     @Inject
     lateinit var searchUsersFragment: SearchUsersFragment
 
     @Inject
     lateinit var favoriteUsersFragment: FavoriteUsersFragment
 
+    private var toolbarLayoutParams: AppBarLayout.LayoutParams ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSupportActionBar(main_toolbar)
+
+        supportActionBar?.setHomeButtonEnabled(true)
+        toolbarLayoutParams = main_toolbar.layoutParams as? AppBarLayout.LayoutParams
+
 
         val fragmentPagerAdapter = MainTabFragmentPagerAdapter(supportFragmentManager).apply {
             clearFragment()
@@ -47,4 +52,5 @@ class MainActivity : BaseActivity() {
 
         })
     }
+
 }
