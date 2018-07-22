@@ -11,36 +11,44 @@
         android:layout_height="match_parent"
         android:padding="@dimen/default_padding" >
 
-        <Button
-            android:id="@+id/searchUsers_btnSearch"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:background="@drawable/selector_btn_search"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{() -> viewModel.searchUsers()}" />
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/searchUsers_clSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/searchUsers_etUserName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@={viewModel.userName}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/searchUsers_btnSearch"
-            android:singleLine="true"
-            android:lines="1"
-            android:maxLines="1" />
+            <Button
+                android:id="@+id/searchUsers_btnSearch"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:background="@drawable/selector_btn_search"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:onClick="@{() -> viewModel.searchUsers()}" />
+
+            <EditText
+                android:id="@+id/searchUsers_etUserName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@={viewModel.userName}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/searchUsers_btnSearch"
+                android:singleLine="true"
+                android:lines="1"
+                android:maxLines="1" />
+
+        </android.support.constraint.ConstraintLayout>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/searchUsers_rvUsers"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:scrollbars="vertical"
             app:layout_constraintVertical_weight="1"
-            app:layout_constraintTop_toBottomOf="@id/searchUsers_etUserName"
+            app:layout_constraintTop_toBottomOf="@id/searchUsers_clSearch"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            android:scrollbars="vertical"
             />
 
     </android.support.constraint.ConstraintLayout>

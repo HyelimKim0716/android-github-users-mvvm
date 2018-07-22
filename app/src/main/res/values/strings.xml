@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Search Github Users</string>
+    <string name="app_name">Github Users</string>
     
     <string name="input_user_name">검색어를 입력하세요.</string>
 </resources>

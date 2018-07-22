@@ -1,6 +1,8 @@
 package com.githubapi.search.searchgithubusers.ui.main.search_user
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -17,6 +19,7 @@ import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.search_user.search_user_list.SearchUserRecyclerViewAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_search_users.*
 import javax.inject.Inject
 
@@ -39,6 +42,12 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
     override val layoutId: Int = R.layout.fragment_search_users
 
     private val disposables = CompositeDisposable()
+
+    val searchUsersViewEventSender = PublishSubject.create<Pair<SearchUsersViewEvent, Any>>().apply { observeOn(AndroidSchedulers.mainThread()) }
+
+    private lateinit var recyclerViewManager: LinearLayoutManager
+
+    private var prevFirstVisiblePosition = 0
 
     override fun onResume() {
         bind()
@@ -65,10 +74,15 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
 
         binding.viewModel = searchUsersViewModel
         searchUsers_etUserName.setOnEditorActionListener(editorActionListener)
-        searchUsers_rvUsers.adapter = adapter
 
         itemDecoration.stickyItemDecorationCallback = decorationCallback
-        searchUsers_rvUsers.addItemDecoration(itemDecoration)
+        searchUsers_rvUsers.let {
+            it.adapter = adapter
+            it.addOnScrollListener(scrollListener)
+            it.addItemDecoration(itemDecoration)
+            recyclerViewManager = it.layoutManager as LinearLayoutManager
+            prevFirstVisiblePosition = recyclerViewManager.findFirstCompletelyVisibleItemPosition()
+        }
     }
 
     private fun receiveMainViewEvent(viewEvent: Pair<MainViewEvent, Any>) {
@@ -91,6 +105,7 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
     }
 
     private fun refreshUserList() {
+        prevFirstVisiblePosition = 0
         adapter.notifyDataSetChanged()
     }
 
@@ -118,6 +133,38 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
 
     }
 
+    private fun sendSearchUsersViewEvent(viewEvent: SearchUsersViewEvent, data: Any) {
+        searchUsersViewEventSender.onNext(viewEvent to data)
+    }
+
+    private val scrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            val currentFirstVisiblePosition = recyclerViewManager.findFirstVisibleItemPosition()
+
+            if (currentFirstVisiblePosition == prevFirstVisiblePosition) return
+
+            if (currentFirstVisiblePosition - prevFirstVisiblePosition < -1)
+                showSearchLayout(currentFirstVisiblePosition)
+            else if (currentFirstVisiblePosition - prevFirstVisiblePosition > 1)
+                hideSearchLayout(currentFirstVisiblePosition)
+
+        }
+
+    }
+
+    private fun hideSearchLayout(currentFirstVisible: Int) {
+        searchUsers_clSearch.visibility = View.GONE
+        sendSearchUsersViewEvent(SearchUsersViewEvent.RECYCLER_VIEW_SCROLL_DOWN, 0)
+        prevFirstVisiblePosition = currentFirstVisible
+    }
+
+    private fun showSearchLayout(currentFirstVisible: Int) {
+        searchUsers_clSearch.visibility = View.VISIBLE
+        sendSearchUsersViewEvent(SearchUsersViewEvent.RECYCLER_VIEW_SCROLL_UP, 0)
+        prevFirstVisiblePosition = currentFirstVisible
+    }
 
     private val editorActionListener = TextView.OnEditorActionListener { v, actionId, event ->
         if (actionId == EditorInfo.IME_ACTION_DONE)

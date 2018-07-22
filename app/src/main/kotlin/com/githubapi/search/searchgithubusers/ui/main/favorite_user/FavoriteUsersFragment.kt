@@ -2,6 +2,7 @@ package com.githubapi.search.searchgithubusers.ui.main.favorite_user
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -11,12 +12,12 @@ import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.FragmentFavoriteUsersBinding
 import com.githubapi.search.searchgithubusers.extensions.hideKeyboard
-import com.githubapi.search.searchgithubusers.ui.adapter.StickyItemDecorationCallback
 import com.githubapi.search.searchgithubusers.ui.main.MainViewEvent
 import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.favorite_user_list.FavoriteUserRecyclerViewAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_favorite_users.*
 import javax.inject.Inject
 
@@ -36,6 +37,12 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
     override val layoutId: Int = R.layout.fragment_favorite_users
 
     private val disposables = CompositeDisposable()
+
+    val favoriteUsersViewEventSender = PublishSubject.create<Pair<FavoriteUsersViewEvent, Any>>().apply { observeOn(AndroidSchedulers.mainThread()) }
+
+    private lateinit var recyclerViewManager: GridLayoutManager
+
+    private var prevFirstVisiblePosition = 0
 
     override fun onResume() {
         LogMgr.d()
@@ -70,8 +77,13 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
 
         binding.viewModel = favoriteUsersViewModel
         favoriteUsers_etUserName.setOnEditorActionListener(editorActionListener)
-        favoriteUsers_rvFavoriteUsers.layoutManager = GridLayoutManager(context, 3)
-        favoriteUsers_rvFavoriteUsers.adapter = adapter
+        favoriteUsers_rvFavoriteUsers.let {
+            it.layoutManager = GridLayoutManager(context, 3)
+            it.adapter = adapter
+            it.addOnScrollListener(scrollListener)
+            recyclerViewManager = it.layoutManager as GridLayoutManager
+            prevFirstVisiblePosition = recyclerViewManager.findFirstCompletelyVisibleItemPosition()
+        }
     }
 
     override fun refresh() {
@@ -151,19 +163,35 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
         false
     }
 
-    private val decorationCallback: StickyItemDecorationCallback = object : StickyItemDecorationCallback {
-        override fun isSection(position: Int): Boolean {
-            return position == 0
-                    || favoriteUsersViewModel
-                    .searchedFavoriteUserList[position]
-                    .login.toCharArray()[0].toLowerCase() != favoriteUsersViewModel
-                    .searchedFavoriteUserList[position.minus(1)]
-                    .login.toCharArray()[0].toLowerCase()
-        }
+    private fun sendFavoriteUsersViewEvent(viewEvent: FavoriteUsersViewEvent, data: Any) {
+        favoriteUsersViewEventSender.onNext(viewEvent to data)
+    }
 
-        override fun getSectionHeader(position: Int): CharSequence {
-            return favoriteUsersViewModel.searchedFavoriteUserList[position].login.subSequence(0, 1)
-        }
+    private val scrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
 
+            val currentFirstVisiblePosition = recyclerViewManager.findFirstVisibleItemPosition()
+
+            if (currentFirstVisiblePosition == prevFirstVisiblePosition) return
+
+            if (currentFirstVisiblePosition - prevFirstVisiblePosition < -2)
+                showSearchLayout(currentFirstVisiblePosition)
+            else if (currentFirstVisiblePosition - prevFirstVisiblePosition > 2)
+                hideSearchLayout(currentFirstVisiblePosition)
+
+        }
+    }
+
+    private fun hideSearchLayout(currentFirstVisiblePosition: Int) {
+        favoriteUsers_clSearch.visibility = View.GONE
+        sendFavoriteUsersViewEvent(FavoriteUsersViewEvent.RECYCLER_VIEW_SCROLL_DOWN, 0)
+        prevFirstVisiblePosition = currentFirstVisiblePosition
+    }
+
+    private fun showSearchLayout(currentFirstVisiblePosition: Int) {
+        favoriteUsers_clSearch.visibility = View.VISIBLE
+        sendFavoriteUsersViewEvent(FavoriteUsersViewEvent.RECYCLER_VIEW_SCROLL_UP, 0)
+        prevFirstVisiblePosition = currentFirstVisiblePosition
     }
 }
