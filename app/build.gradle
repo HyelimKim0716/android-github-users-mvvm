@@ -36,6 +36,10 @@ android {
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
+    packagingOptions {
+        exclude 'asm-license.txt'
+    }
+
     dataBinding {
         enabled = true
     }
