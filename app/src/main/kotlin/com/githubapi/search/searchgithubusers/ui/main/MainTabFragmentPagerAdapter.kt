@@ -1,13 +1,12 @@
 package com.githubapi.search.searchgithubusers.ui.main
 
-import android.support.v4.app.Fragment
+import android.content.Context
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.PagerAdapter
-import android.view.View
+import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseFragment
 
-class MainTabFragmentPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
+class MainTabFragmentPagerAdapter(val context: Context, fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
 
     private val FRAGMENT_SEARCH_USER_POSITION = 0
     private val FRAGMENT_FAVORITE_USER_POSITION = 1
@@ -27,8 +26,8 @@ class MainTabFragmentPagerAdapter(fragmentManager: FragmentManager) : FragmentPa
     override fun getCount(): Int = fragmentList.size
 
     override fun getPageTitle(position: Int): CharSequence? = when (position) {
-        FRAGMENT_SEARCH_USER_POSITION -> "Search Users"
-        FRAGMENT_FAVORITE_USER_POSITION -> "Favorite Users"
+        FRAGMENT_SEARCH_USER_POSITION -> context.resources.getString(R.string.search_github_users)
+        FRAGMENT_FAVORITE_USER_POSITION -> context.resources.getString(R.string.search_favorite_users)
         else -> null
     }
 }
