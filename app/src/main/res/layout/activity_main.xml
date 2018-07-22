@@ -25,7 +25,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="fixed"
-        app:layout_constraintTop_toBottomOf="@id/main_appBarLayout" />
+        app:layout_constraintTop_toBottomOf="@id/main_appBarLayout"
+        app:tabIndicatorColor="@color/green_700"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+        app:tabSelectedTextColor="@color/green_500"
+        app:tabTextColor="@color/colorPrimaryDark" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/main_viewPager"

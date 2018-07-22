@@ -30,6 +30,8 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var favoriteUsersFragment: FavoriteUsersFragment
 
+    lateinit var fragmentPagerAdapter: MainTabFragmentPagerAdapter
+
     private var toolbarLayoutParams: AppBarLayout.LayoutParams ?= null
 
     private val disposables = CompositeDisposable()
@@ -63,7 +65,7 @@ class MainActivity : BaseActivity() {
         toolbarLayoutParams = main_toolbar.layoutParams as? AppBarLayout.LayoutParams
 
 
-        val fragmentPagerAdapter = MainTabFragmentPagerAdapter(supportFragmentManager).apply {
+        fragmentPagerAdapter = MainTabFragmentPagerAdapter(baseContext, supportFragmentManager).apply {
             clearFragment()
             addFragment(searchUsersFragment)
             addFragment(favoriteUsersFragment)
@@ -71,6 +73,7 @@ class MainActivity : BaseActivity() {
 
         main_viewPager.adapter = fragmentPagerAdapter
         main_tabLayout.setupWithViewPager(main_viewPager)
+
         main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) { }
 

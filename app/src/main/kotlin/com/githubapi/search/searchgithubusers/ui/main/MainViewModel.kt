@@ -34,9 +34,13 @@ class MainViewModel(private val userRepository: UserRepository) {
 
             userList.remove(userItem)
             sendMainViewEvent(MainViewEvent.REFRESH_DELETED_ONE_ITEM, userItem)
+
+            userRepository.realmCompleteCheckSubject?.onNext(userItem)
         }, {
             it.printStackTrace()
             LogMgr.e("getAllFavoriteUsers Failed. Error: ${it.message}")
+
+            userRepository.realmCompleteCheckSubject?.onError(it)
         })
 
     }

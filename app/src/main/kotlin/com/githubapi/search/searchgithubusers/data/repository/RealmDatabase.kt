@@ -59,15 +59,26 @@ open class RealmDatabase(val context: Context) {
         })
     }
 
+    open fun <T: RealmObject> deleteAllItems(clazz: Class<T>): Completable
+    = Completable.create { emitter ->
+        getRealm().executeTransactionAsync({
+            it.delete(clazz)
+        }, {
+            emitter.onComplete()
+            LogMgr.d("ㅊㅊ completed")
+        }, {
+            emitter.onError(it)
+            LogMgr.e("deleteAllItems error: ${it.message}")
+        })
+    }
+
     open fun <T: RealmObject> deleteItem(clazz: Class<T>, fieldName: String, value: Any): Completable
     = Completable.create { emitter ->
         getRealm().executeTransactionAsync({
-            LogMgr.d("fieldName: $fieldName, value: $value")
             val item = getItem(clazz, arrayOf(fieldName to value))
-            LogMgr.d("deleteItem item? $item")
             item?.deleteFromRealm() ?: emitter.onError(Exception())
         }, {
-            LogMgr.d("deleteItem")
+            LogMgr.d("deleteItem completed")
             emitter.onComplete()
         }, {
             it.printStackTrace()
@@ -75,6 +86,9 @@ open class RealmDatabase(val context: Context) {
             LogMgr.e("deleteItem error: ${it.message}")
         })
     }
+
+    open fun <T: RealmObject> getCount(clazz: Class<T>)
+    = getRealm().where(clazz).count()
 
     fun <T: RealmObject> getItem(clazz: Class<T>, fieldName: String, value: Any)
     = getItem(clazz, arrayOf(fieldName to value))

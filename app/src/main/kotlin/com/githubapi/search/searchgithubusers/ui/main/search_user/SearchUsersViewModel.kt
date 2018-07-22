@@ -42,9 +42,9 @@ class SearchUsersViewModel(private val searchUsersApi: GithubSearchUserApi, priv
 
                     }, {
                         it.printStackTrace()
-                        println("Get users error: ${it.message}")
+                        LogMgr.d("Get users error: ${it.message}")
                     }, {
-                        println("Get users results finished")
+                        LogMgr.d("Get users results finished")
                         sendUsersViewEvent(SearchUsersViewEvent.REFRESH_USER_LIST, 0)
                     })
         }

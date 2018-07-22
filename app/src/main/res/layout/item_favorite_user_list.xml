@@ -31,6 +31,7 @@
             android:button="@null" />
 
         <TextView
+            android:id="@+id/favoriteUserListItem_tvUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/favoriteUserListItem_ivUser"
