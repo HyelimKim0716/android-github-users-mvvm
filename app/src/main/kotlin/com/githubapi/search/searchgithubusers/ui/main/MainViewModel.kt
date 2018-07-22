@@ -1,5 +1,6 @@
 package com.githubapi.search.searchgithubusers.ui.main
 
+import android.support.annotation.VisibleForTesting
 import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.data.repository.UserRepository
@@ -15,8 +16,6 @@ class MainViewModel(private val userRepository: UserRepository) {
     fun sendMainViewEvent(viewEvent: MainViewEvent, data: Any) {
         mainViewEventSender.onNext(viewEvent to data)
     }
-
-
 
     fun addFavoriteUser(userItem: UserItem) {
         userRepository.addUserItem(userItem)
@@ -43,7 +42,6 @@ class MainViewModel(private val userRepository: UserRepository) {
     }
 
     fun getAllFavoriteUsers() {
-        LogMgr.d()
         userList.clear()
         userRepository.getAllUsers().subscribe({
             userList.add(it)
@@ -51,10 +49,38 @@ class MainViewModel(private val userRepository: UserRepository) {
             it.printStackTrace()
             LogMgr.e("getAllFavoriteUsers Failed. Error: ${it.message}")
         }, {
-            LogMgr.d("Getting all favorite users is completed, userList: ${userList.size}")
             sendMainViewEvent(MainViewEvent.REFRESH_All_FAVORITE_USER_LIST, 0)
         })
     }
 
-
 }
+
+private val testUserName = "testUserName"
+@VisibleForTesting
+val demoUserItems = arrayListOf(
+        UserItem().apply {
+            id = 1
+            login = "$testUserName 1"
+            isFavorite = true
+        },
+        UserItem().apply {
+            id = 2
+            login = "$testUserName 2"
+            isFavorite = true
+        },
+        UserItem().apply {
+            id = 3
+            login = "$testUserName 3"
+            isFavorite = false
+        },
+        UserItem().apply {
+            id = 4
+            login = "$testUserName 4"
+            isFavorite = false
+        },
+        UserItem().apply {
+            id = 5
+            login = "$testUserName 5"
+            isFavorite = false
+        }
+)

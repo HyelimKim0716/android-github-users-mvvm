@@ -1,6 +1,5 @@
 package com.githubapi.search.searchgithubusers.common
 
-import android.text.TextUtils
 import android.util.Log
 
 object LogMgr {
@@ -14,14 +13,6 @@ object LogMgr {
             simpleClassName = stackTrace.className.substringAfterLast(".").substringBefore("$")
             if (simpleClassName != this::class.java.simpleName) break
         }
-
-//        if (customTag.isNotEmpty()) {
-//            stringBuilder.append("[$customTag] ")
-//        }
-//
-//        if (isShowThreadName) {
-//            stringBuilder.append("${Thread.currentThread().name}: ")
-//        }
 
         stringBuilder.append("$simpleClassName > " +
                 "${stackTrace?.methodName}:${stackTrace?.lineNumber}")
