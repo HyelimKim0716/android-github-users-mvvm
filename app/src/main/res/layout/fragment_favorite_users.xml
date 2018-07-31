@@ -48,5 +48,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="android.support.v7.widget.GridLayoutManager"
             android:scrollbars="vertical" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/favoriteUsers_btnTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:src="@drawable/ic_arrow_upward_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="@{() -> viewModel.moveToTop()}"/>
     </android.support.constraint.ConstraintLayout>
 </layout>
