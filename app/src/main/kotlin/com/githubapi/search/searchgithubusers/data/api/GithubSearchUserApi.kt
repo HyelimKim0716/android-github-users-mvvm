@@ -1,6 +1,5 @@
 package com.githubapi.search.searchgithubusers.data.api
 
-import com.githubapi.search.searchgithubusers.data.model.Item
 import com.githubapi.search.searchgithubusers.data.model.Users
 import io.reactivex.Observable
 import retrofit2.http.GET

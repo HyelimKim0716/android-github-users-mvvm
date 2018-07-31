@@ -22,8 +22,10 @@ class ApiModule {
 
     @Provides
     fun provideGson(): Gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_DASHES)
-            .setDateFormat("yyyy-MM-dd hh:mm:ss")
             .create()
+
+    @Provides
+    fun provideGsonFactory(gson: Gson): GsonConverterFactory = GsonConverterFactory.create(gson)
 
     @Provides
     fun provideRxFactory(): RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
@@ -33,7 +35,7 @@ class ApiModule {
             .apply { level = HttpLoggingInterceptor.Level.BODY }
 
     @Provides
-    fun provideIntercepter(): Interceptor = Interceptor { chain ->
+    fun provideInterceptor(): Interceptor = Interceptor { chain ->
         val originalRequest = chain.request()
         val requestBuilder = originalRequest.newBuilder()
         val request = requestBuilder.build()
@@ -50,9 +52,9 @@ class ApiModule {
     }
 
     @Provides
-    fun provideRetorofit(gson: Gson, rxJava2CallAdapterFactory: RxJava2CallAdapterFactory, okHttpClientBuilder: OkHttpClient.Builder)
+    fun provideRetorofit(gsonConverterFactory: GsonConverterFactory, rxJava2CallAdapterFactory: RxJava2CallAdapterFactory, okHttpClientBuilder: OkHttpClient.Builder)
     = Retrofit.Builder().apply {
-        addConverterFactory(GsonConverterFactory.create(gson))
+        addConverterFactory(gsonConverterFactory)
         addCallAdapterFactory(rxJava2CallAdapterFactory)
         baseUrl(baseUrl)
         client(okHttpClientBuilder.build())

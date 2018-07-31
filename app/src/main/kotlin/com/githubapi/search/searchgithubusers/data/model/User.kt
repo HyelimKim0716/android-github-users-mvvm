@@ -1,52 +1,48 @@
 package com.githubapi.search.searchgithubusers.data.model
 
-import java.util.*
+import com.githubapi.search.searchgithubusers.common.UserValueManager
 
 interface User {
     var userId: String
+    var isFavorite: Boolean
     var login: String
     var id: Int
-    var node_id: String
-    var avatar_url: String
+    var nodeId: String
+    var avatarUrl: String
     var url: String
-    var html_url: String
-    var followers_url: String
-    var following_url: String
-    var gists_url: String
-    var starred_url: String
-    var subscriptions_url: String
-    var organizations_url: String
-    var repos_url: String
-    var events_url: String
-    var received_events_url: String
+    var htmlUrl: String
+    var followersUrl: String
+    var followingUrl: String
+    var gistsUrl: String
+    var starredUrl: String
+    var subscriptionsUrl: String
+    var organizationsUrl: String
+    var reposUrl: String
+    var eventsUrl: String
+    var receivedEventsUrl: String
     var type: String
-//    val site_admin: Boolean
-//    val source: Double
-
-    var isFavorite: Boolean
-    var createdTime: Long
+    var siteAdmin: Boolean
+    var source: Double
 
     fun initValue() {
-        userId = UUID.randomUUID().toString()
+        userId = UserValueManager.createUserId()
         login = ""
         id = -1
-        node_id = ""
-        avatar_url = ""
+        nodeId = ""
+        avatarUrl = ""
         url = ""
-        html_url = ""
-        followers_url = ""
-        following_url = ""
-        gists_url = ""
-        starred_url = ""
-        subscriptions_url = ""
-        organizations_url = ""
-        repos_url = ""
-        events_url = ""
-        received_events_url = ""
+        htmlUrl = ""
+        followersUrl = ""
+        followingUrl = ""
+        gistsUrl = ""
+        starredUrl = ""
+        subscriptionsUrl = ""
+        organizationsUrl = ""
+        reposUrl = ""
+        eventsUrl = ""
+        receivedEventsUrl = ""
         type = ""
         isFavorite = false
-        createdTime = getCurrentTime()
     }
 
-    fun getCurrentTime() = System.currentTimeMillis()
 }
