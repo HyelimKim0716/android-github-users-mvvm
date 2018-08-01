@@ -2,6 +2,9 @@
     <string name="app_name">Github Users</string>
 
     <string name="input_user_name">검색어를 입력하세요.</string>
+
     <string name="search_github_users">Github Users</string>
     <string name="search_favorite_users">Favorite Users</string>
+
+    <string name="detail_no_results">No results</string>
 </resources>

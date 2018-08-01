@@ -1,9 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.detail.DetailActivity">
+<layout>
+    <data>
+        <variable
+            name="item"
+            type="com.githubapi.search.searchgithubusers.data.model.UserItem" />
+    </data>
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.detail.DetailActivity"
+        android:padding="@dimen/default_padding" >
+
+        <ImageView
+            android:id="@+id/detail_ivUser"
+            android:layout_width="@dimen/list_item_image_view_size"
+            android:layout_height="@dimen/list_item_image_view_size"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/detail_tvUserNameValue"
+            style="@style/DetailTitleTextView"
+            android:text="@{item.login}"
+            android:layout_marginTop="@dimen/default_margin"
+            app:layout_constraintTop_toBottomOf="@id/detail_ivUser"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/detail_tvScoreTitle"
+            style="@style/DetailTitleTextView"
+            app:layout_constraintTop_toBottomOf="@id/detail_tvUserNameValue"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Score :" />
+
+        <TextView
+            android:id="@+id/detail_tvScoreValue"
+            style="@style/DetailValueTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/detail_tvScoreTitle"
+            app:layout_constraintBaseline_toBaselineOf="@id/detail_tvScoreTitle" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/centerGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.6" />
+
+        <TextView
+            android:id="@+id/detail_tvFollowerTitle"
+            style="@style/DetailTitleTextView"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="Followers"
+            app:layout_constraintTop_toBottomOf="@id/detail_tvScoreTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/detail_rvFollower"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scrollbars="vertical"
+            app:layoutManager="android.support.v7.widget.GridLayoutManager"
+            android:padding="@dimen/default_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_tvFollowerTitle"
+            app:layout_constraintBottom_toTopOf="@id/centerGuideline" />
+
+        <TextView
+            android:id="@+id/detail_tvFollowerNoResult"
+            style="@style/DetailValueTextView"
+            app:layout_constraintTop_toBottomOf="@id/detail_tvFollowerTitle"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/detail_tvFollowingTitle"
+            style="@style/DetailTitleTextView"
+            app:layout_constraintTop_toBottomOf="@id/centerGuideline"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="Followings" />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/detail_rvFollowing"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layoutManager="android.support.v7.widget.GridLayoutManager"
+            android:scrollbars="vertical"
+            android:padding="@dimen/default_padding"
+            app:layout_constraintTop_toBottomOf="@id/detail_tvFollowingTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/detail_tvFollowingNoResult"
+            style="@style/DetailValueTextView"
+            app:layout_constraintTop_toBottomOf="@id/detail_tvFollowingTitle"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

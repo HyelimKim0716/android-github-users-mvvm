@@ -24,7 +24,7 @@ fun <T: User> User.convert(item: T): T
     it.receivedEventsUrl = receivedEventsUrl
     it.type = type
     it.siteAdmin = siteAdmin
-    it.source = source
+    it.score = score
 }
 
 fun User.toRealmUserItem() = this.convert(RealmUserItem())

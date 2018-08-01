@@ -2,6 +2,7 @@ package com.githubapi.search.searchgithubusers.di
 
 import com.githubapi.search.searchgithubusers.data.api.GithubSearchUserApi
 import com.githubapi.search.searchgithubusers.data.repository.UserRepository
+import com.githubapi.search.searchgithubusers.ui.detail.DetailViewModel
 import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.FavoriteUsersViewModel
 import com.githubapi.search.searchgithubusers.ui.main.search_user.SearchUsersViewModel
@@ -24,5 +25,7 @@ class ViewModelModule {
     @Singleton
     fun provideFavoriteUsersViewModel(userRepository: UserRepository) = FavoriteUsersViewModel(userRepository)
 
-
+    @Provides
+    @Singleton
+    fun provideDetailViewModel(githubSearchUserApi: GithubSearchUserApi) = DetailViewModel(githubSearchUserApi)
 }

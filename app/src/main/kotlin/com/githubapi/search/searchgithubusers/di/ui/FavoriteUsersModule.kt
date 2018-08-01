@@ -1,6 +1,5 @@
 package com.githubapi.search.searchgithubusers.di.ui
 
-import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.FavoriteUsersViewModel
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.favorite_user_list.FavoriteUserBaseRecyclerViewHolderFactory
 import com.githubapi.search.searchgithubusers.ui.main.favorite_user.favorite_user_list.FavoriteUserRecyclerViewAdapter

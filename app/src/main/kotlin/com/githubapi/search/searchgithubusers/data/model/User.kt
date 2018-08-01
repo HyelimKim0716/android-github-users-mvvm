@@ -22,7 +22,7 @@ interface User {
     var receivedEventsUrl: String
     var type: String
     var siteAdmin: Boolean
-    var source: Double
+    var score: Double
 
     fun initValue() {
         userId = UserValueManager.createUserId()

@@ -1,5 +1,6 @@
 package com.githubapi.search.searchgithubusers.ui.main.search_user
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,6 +15,9 @@ import com.githubapi.search.searchgithubusers.databinding.FragmentSearchUsersBin
 import com.githubapi.search.searchgithubusers.extensions.hideKeyboard
 import com.githubapi.search.searchgithubusers.ui.adapter.StickyItemDecoration
 import com.githubapi.search.searchgithubusers.ui.adapter.StickyItemDecorationCallback
+import com.githubapi.search.searchgithubusers.ui.detail.DetailActivity
+import com.githubapi.search.searchgithubusers.ui.detail.DetailViewEvent
+import com.githubapi.search.searchgithubusers.ui.detail.DetailViewModel
 import com.githubapi.search.searchgithubusers.ui.main.MainViewEvent
 import com.githubapi.search.searchgithubusers.ui.main.MainViewModel
 import com.githubapi.search.searchgithubusers.ui.main.search_user.search_user_list.SearchUserRecyclerViewAdapter
@@ -111,7 +115,8 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
     private fun receiveSearchUsersViewEvent(viewEvent: Pair<SearchUsersViewEvent, Any>) {
         when (viewEvent.first) {
             SearchUsersViewEvent.REFRESH_USER_LIST -> refreshUserList()
-            SearchUsersViewEvent.CHECK_FAVORITE_USER -> if (viewEvent.second is Int) checkFavoriteUser(viewEvent.second as Int)
+            SearchUsersViewEvent.ITEM_VIEW_CLICKED -> (viewEvent.second as? Int)?.let { moveIntoDetailView(it) }
+            SearchUsersViewEvent.CHECK_FAVORITE_USER -> (viewEvent.second as? Int)?.let{ checkFavoriteUser(it) }
             SearchUsersViewEvent.HIDE_KEYBOARD -> searchUsers_etUserName.hideKeyboard(activity)
             SearchUsersViewEvent.MOVE_TO_TOP -> moveToTop()
         }
@@ -124,6 +129,12 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
     private fun refreshUserList() {
         prevFirstVisiblePosition = 0
         adapter.notifyDataSetChanged()
+    }
+
+    private fun moveIntoDetailView(position: Int) {
+        val intent = Intent(context, DetailActivity::class.java)
+        intent.putExtra(DetailViewEvent.EXTRA_NAME_USER_ITEM.name, searchUsersViewModel.searchedUserList[position])
+        startActivity(intent)
     }
 
     private fun refreshDeletedOneItem(deletedUserItem: UserItem) {

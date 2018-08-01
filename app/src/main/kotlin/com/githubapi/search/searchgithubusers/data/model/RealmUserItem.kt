@@ -21,7 +21,7 @@ open class RealmUserItem(@PrimaryKey override var userId: String = "") : User, R
     override lateinit var receivedEventsUrl: String
     override lateinit var type: String
     override var siteAdmin: Boolean = false
-    override var source: Double = -1.0
+    override var score: Double = -1.0
     override var isFavorite: Boolean = false
 
     init {
