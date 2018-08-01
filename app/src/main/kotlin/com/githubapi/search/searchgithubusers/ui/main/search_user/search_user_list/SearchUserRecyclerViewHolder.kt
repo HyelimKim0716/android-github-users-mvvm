@@ -23,12 +23,12 @@ class SearchUserRecyclerViewHolder(parent: ViewGroup, @Provided val viewModel: S
         binding?.userItem = userItem
 
         Glide.with(context)
-                .load(userItem.avatar_url)
+                .load(userItem.avatarUrl)
                 .apply(RequestOptions.circleCropTransform())
                 .into(itemView.searchUserListItem_ivUser)
 
-        itemView.setOnClickListener { viewModel.sendUsersViewEvent(SearchUsersViewEvent.CHECK_FAVORITE_USER, adapterPosition) }
-        itemView.searchUserListItem_cbFavorite.setOnClickListener { viewModel.sendUsersViewEvent(SearchUsersViewEvent.CHECK_FAVORITE_USER, adapterPosition) }
+        itemView.setOnClickListener { viewModel.sendSearchUsersViewEvent(SearchUsersViewEvent.CHECK_FAVORITE_USER, adapterPosition) }
+        itemView.searchUserListItem_cbFavorite.setOnClickListener { viewModel.sendSearchUsersViewEvent(SearchUsersViewEvent.CHECK_FAVORITE_USER, adapterPosition) }
     }
 
 }

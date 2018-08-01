@@ -22,7 +22,7 @@ class FavoriteUserRecyclerViewHolder(parent: ViewGroup, @Provided private val vi
         binding?.userItem = userItem
 
         Glide.with(context)
-                .load(userItem.avatar_url)
+                .load(userItem.avatarUrl)
                 .apply(RequestOptions.circleCropTransform())
                 .into(itemView.favoriteUserListItem_ivUser)
 
