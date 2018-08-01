@@ -1,7 +1,6 @@
 package com.githubapi.search.searchgithubusers.ui.main.favorite_user
 
 import android.databinding.ObservableField
-import com.githubapi.search.searchgithubusers.common.LogMgr
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.data.repository.UserRepository
 import io.reactivex.schedulers.Schedulers
@@ -14,7 +13,7 @@ class FavoriteUsersViewModel(private val userRepository: UserRepository) {
     val searchedFavoriteUserList = ArrayList<UserItem>()
 
     val favoriteUsersViewEventSender = PublishSubject.create<Pair<FavoriteUsersViewEvent, Any>>()
-                                                    .apply { subscribeOn(Schedulers.io()) }
+            .apply { subscribeOn(Schedulers.io()) }
 
     fun sendFavoriteUsersViewEvent(event: FavoriteUsersViewEvent, data: Any) {
         favoriteUsersViewEventSender.onNext(event to data)
@@ -32,7 +31,10 @@ class FavoriteUsersViewModel(private val userRepository: UserRepository) {
 
             sendFavoriteUsersViewEvent(FavoriteUsersViewEvent.REFRESH_SEARCHED_USER_LIST, 0)
 
-        } ?: sendFavoriteUsersViewEvent(FavoriteUsersViewEvent.GET_ALL_USERS, 0)
+        } ?: sendFavoriteUsersViewEvent(FavoriteUsersViewEvent.GET_ALL_FAVORITE_USERS, 0)
     }
 
+    fun moveToTop() {
+        sendFavoriteUsersViewEvent(FavoriteUsersViewEvent.MOVE_TO_TOP, 0)
+    }
 }

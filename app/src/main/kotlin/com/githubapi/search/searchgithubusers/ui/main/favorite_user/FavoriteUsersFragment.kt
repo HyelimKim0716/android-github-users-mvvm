@@ -101,10 +101,12 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
 
     private fun receiveFavoriteUsersViewEvent(viewEvent: Pair<FavoriteUsersViewEvent, Any>) {
         when (viewEvent.first) {
-            FavoriteUsersViewEvent.GET_ALL_USERS -> refresh()
+            FavoriteUsersViewEvent.GET_ALL_FAVORITE_USERS -> refresh()
             FavoriteUsersViewEvent.REFRESH_SEARCHED_USER_LIST -> refreshSearchedUserList()
             FavoriteUsersViewEvent.DELETE_ONE_ITEM -> if (viewEvent.second is Int) deleteOneItem(viewEvent.second as Int)
             FavoriteUsersViewEvent.HIDE_KEYBOARD -> favoriteUsers_etUserName.hideKeyboard(activity)
+            FavoriteUsersViewEvent.MOVE_TO_TOP -> moveToTop()
+            else -> {}
         }
     }
 
@@ -150,6 +152,10 @@ class FavoriteUsersFragment: BaseDataBindingFragment<FragmentFavoriteUsersBindin
         favoriteUsersViewModel.searchedFavoriteUserList.removeAt(position)
         adapter.notifyItemRemoved(position)
 
+    }
+
+    private fun moveToTop() {
+        favoriteUsers_rvFavoriteUsers.scrollToPosition(0)
     }
 
     private fun refreshSearchedUserList() {

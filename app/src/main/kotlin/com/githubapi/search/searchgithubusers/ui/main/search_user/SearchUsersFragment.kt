@@ -76,6 +76,14 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
         searchUsers_etUserName.setOnEditorActionListener(editorActionListener)
 
         itemDecoration.stickyItemDecorationCallback = decorationCallback
+        itemDecoration.getItemText = { position ->
+            if (searchUsersViewModel.searchedUserList.isNotEmpty())
+                searchUsersViewModel
+                        .searchedUserList[position]
+                        .login
+            else ""
+        }
+
         searchUsers_rvUsers.let {
             it.adapter = adapter
             it.addOnScrollListener(scrollListener)
@@ -84,6 +92,14 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
             prevFirstVisiblePosition = recyclerViewManager.findFirstCompletelyVisibleItemPosition()
         }
     }
+
+    private fun getSearchedUserFirstWord(position: Int)
+            = position == 0
+            || searchUsersViewModel
+            .searchedUserList[position]
+            .login.toCharArray()[0].toLowerCase() != searchUsersViewModel
+            .searchedUserList[position.minus(1)]
+            .login.toCharArray()[0].toLowerCase()
 
     private fun receiveMainViewEvent(viewEvent: Pair<MainViewEvent, Any>) {
         when (viewEvent.first) {
@@ -97,6 +113,7 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
             SearchUsersViewEvent.REFRESH_USER_LIST -> refreshUserList()
             SearchUsersViewEvent.CHECK_FAVORITE_USER -> if (viewEvent.second is Int) checkFavoriteUser(viewEvent.second as Int)
             SearchUsersViewEvent.HIDE_KEYBOARD -> searchUsers_etUserName.hideKeyboard(activity)
+            SearchUsersViewEvent.MOVE_TO_TOP -> moveToTop()
         }
     }
 
@@ -132,6 +149,11 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
             mainViewModel.deleteOneItem(searchUsersViewModel.searchedUserList[position])
 
     }
+
+    private fun moveToTop() {
+        searchUsers_rvUsers.smoothScrollToPosition(0)
+    }
+
 
     private fun sendSearchUsersViewEvent(viewEvent: SearchUsersViewEvent, data: Any) {
         searchUsersViewEventSender.onNext(viewEvent to data)
