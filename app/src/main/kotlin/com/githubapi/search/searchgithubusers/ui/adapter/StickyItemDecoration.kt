@@ -19,9 +19,9 @@ class StickyItemDecoration : RecyclerView.ItemDecoration() {
         super.getItemOffsets(outRect, view, parent, state)
 
         parent?.getChildAdapterPosition(view)?.apply {
-            if (stickyItemDecorationCallback.isSection(this)) {
-                outRect?.top = 80
-                outRect?.bottom = 80
+            if (isHeaderSection(this)) {
+                outRect?.top = 50
+                outRect?.bottom = 50
             }
         }
     }
@@ -43,11 +43,11 @@ class StickyItemDecoration : RecyclerView.ItemDecoration() {
             val child = parent.getChildAt(i)
             val position = parent.getChildAdapterPosition(child)
 
-            val title = stickyItemDecorationCallback.getSectionHeader(position).toString().toUpperCase()
+            val title = getSectionHeader(position).toString().toUpperCase()
             headerView?.stickyHeader_tvHeader?.text = title
 
             if (previousHeader.toString().toUpperCase() != title
-                    || stickyItemDecorationCallback.isSection(position)) {
+                    || isHeaderSection(position)) {
 
                 canvas ?: return
 
@@ -81,7 +81,9 @@ class StickyItemDecoration : RecyclerView.ItemDecoration() {
         val heightSpec = View.MeasureSpec.makeMeasureSpec(parent.height, View.MeasureSpec.UNSPECIFIED)
 
         // Specs for children (headers)
-        val childWidthSpec = ViewGroup.getChildMeasureSpec(widthSpec, parent.paddingLeft.plus(parent.paddingRight), view.layoutParams.width)
+        val childWidthSpec = ViewGroup.getChildMeasureSpec(widthSpec,
+                parent.paddingLeft.plus(parent.paddingRight).plus(parent.verticalScrollbarWidth),
+                view.layoutParams.width)
         val childHeightSpec = ViewGroup.getChildMeasureSpec(heightSpec, parent.paddingTop.plus(parent.paddingBottom), view.layoutParams.height)
 
         view.measure(childWidthSpec, childHeightSpec)
@@ -90,4 +92,16 @@ class StickyItemDecoration : RecyclerView.ItemDecoration() {
         view.layout(0, 0, view.measuredWidth, view.measuredHeight)
     }
 
+    private fun isHeaderSection(position: Int): Boolean
+            = getItemText?.let {
+        position == 0
+                || getSectionHeader(position).toString().toLowerCase() != getSectionHeader(position.minus(1)).toString().toLowerCase()
+    } ?: false
+
+    var getItemText: ((Int) -> String) ?= null
+
+    private fun getSectionHeader(position: Int)
+            = getItemText?.let {
+        it(position).subSequence(0, 1)
+    } ?: false
 }
