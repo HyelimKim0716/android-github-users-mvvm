@@ -7,23 +7,24 @@ import com.githubapi.search.searchgithubusers.data.model.UserItem
 fun <T: User> User.convert(item: T): T
         = item.also {
     it.userId = userId
+    it.isFavorite = isFavorite
     it.login = login
     it.id = id
-    it.node_id = node_id
-    it.avatar_url = avatar_url
+    it.nodeId = nodeId
+    it.avatarUrl = avatarUrl
     it.url = url
-    it.html_url = html_url
-    it.followers_url = followers_url
-    it.following_url = following_url
-    it.gists_url = gists_url
-    it.starred_url = starred_url
-    it.subscriptions_url = subscriptions_url
-    it.organizations_url = organizations_url
-    it.repos_url = repos_url
-    it.received_events_url = received_events_url
+    it.htmlUrl = htmlUrl
+    it.followersUrl = followersUrl
+    it.followingUrl = followingUrl
+    it.gistsUrl = gistsUrl
+    it.starredUrl = starredUrl
+    it.subscriptionsUrl = subscriptionsUrl
+    it.organizationsUrl = organizationsUrl
+    it.reposUrl = reposUrl
+    it.receivedEventsUrl = receivedEventsUrl
     it.type = type
-    it.isFavorite = isFavorite
-    it.createdTime = createdTime
+    it.siteAdmin = siteAdmin
+    it.source = source
 }
 
 fun User.toRealmUserItem() = this.convert(RealmUserItem())
