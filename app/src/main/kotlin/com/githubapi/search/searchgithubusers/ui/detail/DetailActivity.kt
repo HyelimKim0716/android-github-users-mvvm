@@ -10,8 +10,8 @@ import com.githubapi.search.searchgithubusers.R
 import com.githubapi.search.searchgithubusers.base.BaseDataBindingActivity
 import com.githubapi.search.searchgithubusers.data.model.UserItem
 import com.githubapi.search.searchgithubusers.databinding.ActivityDetailBinding
-import com.githubapi.search.searchgithubusers.ui.detail.list.follower.DetailFollowerRecyclerViewAdapter
-import com.githubapi.search.searchgithubusers.ui.detail.list.follower.DetailFollowingRecyclerViewAdapter
+import com.githubapi.search.searchgithubusers.ui.detail.list.follow.DetailFollowerRecyclerViewAdapter
+import com.githubapi.search.searchgithubusers.ui.detail.list.follow.DetailFollowingRecyclerViewAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_detail.*

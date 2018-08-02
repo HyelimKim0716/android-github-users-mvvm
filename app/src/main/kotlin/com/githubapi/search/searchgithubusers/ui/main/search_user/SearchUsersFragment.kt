@@ -79,7 +79,6 @@ class SearchUsersFragment : BaseDataBindingFragment<FragmentSearchUsersBinding>(
         binding.viewModel = searchUsersViewModel
         searchUsers_etUserName.setOnEditorActionListener(editorActionListener)
 
-        itemDecoration.stickyItemDecorationCallback = decorationCallback
         itemDecoration.getItemText = { position ->
             if (searchUsersViewModel.searchedUserList.isNotEmpty())
                 searchUsersViewModel

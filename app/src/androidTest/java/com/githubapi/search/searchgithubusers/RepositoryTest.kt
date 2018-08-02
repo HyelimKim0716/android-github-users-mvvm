@@ -42,7 +42,6 @@ object RepositoryTest {
 
         Completable.fromCallable {
             demoUserItems.forEach {
-                it.createdTime = System.currentTimeMillis()
                 application.userRepository.addUserItem(it)
 
                 SystemClock.sleep(100)

@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.recycler_view_sticky_header_decoration.vie
 
 class StickyItemDecoration : RecyclerView.ItemDecoration() {
 
-    lateinit var stickyItemDecorationCallback: StickyItemDecorationCallback
     private var headerView: View ?= null
 
     override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {

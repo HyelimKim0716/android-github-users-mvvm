@@ -1,4 +1,4 @@
-package com.githubapi.search.searchgithubusers.ui.detail.list.follower
+package com.githubapi.search.searchgithubusers.ui.detail.list.follow
 
 import android.view.ViewGroup
 import com.githubapi.search.searchgithubusers.base.BaseRecyclerViewAdapter
@@ -8,10 +8,10 @@ import com.githubapi.search.searchgithubusers.ui.detail.DetailViewModel
 
 class DetailFollowingRecyclerViewAdapter(private val viewModel: DetailViewModel,
                                          private val detailViewHolderFactories
-                                  : Map<Int, @JvmSuppressWildcards DetailFollowerBaseRecyclerViewHolderFactory>)
+                                  : Map<Int, @JvmSuppressWildcards DetailFollowBaseRecyclerViewHolderFactory>)
                                   : BaseRecyclerViewAdapter<BaseViewHolder<UserItem>>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<UserItem>
-    = detailViewHolderFactories[viewType]?.createFollowerRecyclerViewHolder(parent) ?: DetailFollowerRecyclerViewHolder(parent)
+    = detailViewHolderFactories[viewType]?.createFollowerRecyclerViewHolder(parent) ?: DetailFollowRecyclerViewHolder(parent)
 
     override fun getItemCount(): Int = viewModel.followerList.size
 
